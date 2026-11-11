@@ -9,6 +9,7 @@ import { rutasAuth } from './modulos/usuarios/auth.rutas.js';
 import { rutasCartelera } from './modulos/cartelera/cartelera.rutas.js';
 import { rutasReservas } from './modulos/reservas/reservas.rutas.js';
 import { rutasPagos } from './modulos/pagos/pagos.rutas.js';
+import { rutasControl } from './modulos/entradas/control.rutas.js';
 
 const raiz = path.dirname(fileURLToPath(import.meta.url));
 export const carpetaUploads = path.resolve(raiz, '../uploads');
@@ -39,6 +40,7 @@ export function crearApp() {
   app.use('/api', rutasCartelera);
   app.use('/api', rutasReservas);
   app.use('/api', rutasPagos);
+  app.use('/api', rutasControl);
 
   app.use('/api', rutaNoEncontrada);
 
