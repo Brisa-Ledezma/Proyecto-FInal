@@ -1,0 +1,61 @@
+.cordon-pasos { width: 100%; }
+.cordon { list-style: none; display: flex; width: 100%; }
+.cordon__paso { flex: 1; position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; }
+
+.cordon__poste {
+  position: relative;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-rotulo);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: 2px solid var(--oro-hondo);
+  background: var(--superficie);
+  color: var(--texto-2);
+}
+.cordon__poste::after {
+  content: '';
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  width: 4px;
+  height: 10px;
+  margin-left: -2px;
+  background: linear-gradient(90deg, var(--oro-hondo), var(--oro));
+}
+.cordon__paso--hecho .cordon__poste { background: var(--oro-metal); border-color: var(--oro); color: #1a1004; }
+.cordon__paso--actual .cordon__poste {
+  background: var(--oro-metal);
+  border-color: var(--oro-claro);
+  color: #1a1004;
+  box-shadow: 0 0 0 5px rgba(214, 168, 78, 0.22), 0 0 18px rgba(241, 213, 146, 0.6);
+}
+
+.cordon__soga { position: absolute; top: 9px; left: 50%; width: 100%; height: 24px; overflow: visible; }
+.cordon__soga path { fill: none; stroke-width: 3.5; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.cordon__paso--hecho .cordon__soga path { stroke: var(--cordon); filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.15)); }
+.cordon__paso--actual .cordon__soga path,
+.cordon__paso--pendiente .cordon__soga path { stroke: var(--linea-fuerte); stroke-dasharray: 2 7; }
+
+.cordon__texto {
+  margin-top: 8px;
+  font-family: var(--f-rotulo);
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--texto-2);
+  white-space: nowrap;
+}
+.cordon__paso--actual .cordon__texto { color: var(--oro-texto); font-weight: 500; }
+.cordon__paso--hecho .cordon__texto { color: var(--texto); }
+
+@media (max-width: 520px) {
+  .cordon__texto { font-size: 0.6875rem; letter-spacing: 0.02em; }
+  .cordon__paso--pendiente .cordon__texto, .cordon__paso--hecho .cordon__texto { color: var(--texto-2); }
+}

@@ -1,0 +1,24 @@
+.aviso {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-radius: var(--r-chico);
+  border: 1px solid;
+  line-height: 1.5;
+  animation: aparecer 0.25s ease both;
+}
+.aviso__icono { flex: none; font-size: 22px; margin-top: 1px; }
+.aviso__cuerpo { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.aviso__titulo { font-weight: 700; }
+.aviso__texto { color: var(--texto); }
+.aviso__acciones { display: flex; flex-wrap: wrap; gap: var(--e-3); align-items: center; margin-top: var(--e-2); }
+
+.aviso--error { background: var(--senal-fondo); border-color: var(--senal-borde); }
+.aviso--error .aviso__icono { color: var(--senal); }
+.aviso--ok { background: var(--petroleo-fondo); border-color: var(--petroleo-claro); }
+.aviso--ok .aviso__icono { color: var(--petroleo-texto); }
+.aviso--info { background: var(--info-fondo); border-color: var(--oro-hondo); }
+.aviso--info .aviso__icono { color: var(--oro-texto); }
+.aviso--advertencia { background: var(--aviso-fondo); border-color: var(--oro); }
+.aviso--advertencia .aviso__icono { color: var(--aviso); }

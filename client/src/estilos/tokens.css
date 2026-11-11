@@ -1,0 +1,156 @@
+/*
+ * Golden Screen · Tokens de diseño
+ * Tema oscuro "noche de sala" y tema claro "función matiné".
+ * Sin elección guardada, sigue al sistema operativo. Contraste mínimo 4.5:1 (RNF-08).
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* Superficies */
+  --fondo: #110c0f;
+  --superficie: #1a1216;
+  --superficie-2: #241a1f;
+  --superficie-3: #2e2227;
+  --linea: #3a2b31;
+  --linea-fuerte: #5a4850;
+
+  /* Texto */
+  --texto: #f4ebdd;
+  --texto-2: #b9aa9c;
+  --texto-invertido: #110c0f;
+
+  /* Marca: telón (rojo oscuro). Igual en ambos temas para la barra superior. */
+  --telon-hondo: #2e0912;
+  --telon: #5c1224;
+  --telon-luz: #8a1f36;
+  --cordon: #b0283f;
+  --sobre-telon: #f4ebdd;
+
+  /* Oro: único acento */
+  --oro: #d6a84e;
+  --oro-claro: #f1d592;
+  --oro-hondo: #9c7428;
+  --oro-texto: #e2b860;
+  --oro-metal: linear-gradient(115deg, #9c7428 0%, #d6a84e 20%, #fbe7a8 38%, #d6a84e 52%, #f1d592 70%, #a87f2c 100%);
+  --brillo-oro: 0 0 0 1px rgba(241, 213, 146, 0.35), 0 6px 22px -6px rgba(214, 168, 78, 0.55);
+
+  /* Verde petróleo: lo tuyo y lo confirmado */
+  --petroleo: #2a7a6d;
+  --petroleo-claro: #5fc2b0;
+  --petroleo-texto: #6fd3c0;
+  --petroleo-metal: linear-gradient(135deg, #1f6a5e 0%, #2f8b7c 40%, #7fe0cd 60%, #2a7a6d 100%);
+  --brillo-petroleo: 0 0 0 1px rgba(127, 224, 205, 0.55), 0 0 16px rgba(95, 194, 176, 0.55);
+  --petroleo-fondo: #0f2622;
+
+  /* Estados de mensajes */
+  --senal: #ff8577;
+  --senal-fondo: #3a1414;
+  --senal-borde: #ff8577;
+  --aviso: #f1d592;
+  --aviso-fondo: #2b210f;
+  --info-fondo: #1c1a24;
+
+  /* Butacas */
+  --butaca-libre: #241a1f;
+  --butaca-libre-borde: #b9aa9c;
+  --butaca-ocupada: #3a3035;
+  --butaca-ocupada-texto: #cfc3b7;
+  --butaca-bloqueada-a: #4a2b33;
+  --butaca-bloqueada-b: #2c1c21;
+  --butaca-bloqueada-borde: #8c6a73;
+  --butaca-inhabilitada: #6a5a60;
+
+  /* Tipografía */
+  --f-display: 'Cinzel', 'Times New Roman', serif;
+  --f-texto: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+  --f-rotulo: 'Oswald', 'Arial Narrow', 'Segoe UI', sans-serif;
+
+  --t-rotulo: 0.8125rem;   /* 13 */
+  --t-chico: 0.875rem;     /* 14 */
+  --t-base: 1rem;          /* 16, RNF-08 */
+  --t-medio: 1.125rem;     /* 18 */
+  --t-grande: 1.5rem;      /* 24 */
+  --t-titulo: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+  --t-hero: clamp(2.25rem, 1.5rem + 3vw, 3.75rem);
+
+  /* Espaciado y formas */
+  --e-1: 4px; --e-2: 8px; --e-3: 12px; --e-4: 16px; --e-5: 24px; --e-6: 32px; --e-7: 48px; --e-8: 64px;
+  --r-chico: 4px;
+  --r-medio: 10px;
+  --r-grande: 16px;
+  --sombra: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+  --ancho-max: 1240px;
+  --alto-barra: 68px;
+
+  --transicion: 160ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Tema claro: "función matiné" */
+@media (prefers-color-scheme: light) {
+  :root:not([data-tema='oscuro']) {
+    color-scheme: light;
+    --fondo: #faf5ec;
+    --superficie: #fffdf8;
+    --superficie-2: #f3eadb;
+    --superficie-3: #eadfcc;
+    --linea: #e2d5c3;
+    --linea-fuerte: #c4b3a0;
+    --texto: #24161b;
+    --texto-2: #5e4b45;
+    --texto-invertido: #fffdf8;
+    --oro-texto: #86600f;
+    --brillo-oro: 0 0 0 1px rgba(156, 116, 40, 0.35), 0 6px 18px -6px rgba(156, 116, 40, 0.5);
+    --petroleo-texto: #1d6357;
+    --petroleo-fondo: #e3f3ef;
+    --brillo-petroleo: 0 0 0 1px rgba(42, 122, 109, 0.45), 0 0 14px rgba(42, 122, 109, 0.35);
+    --senal: #b3261e;
+    --senal-fondo: #fce8e6;
+    --senal-borde: #d4473d;
+    --aviso: #7a5208;
+    --aviso-fondo: #fbf0d6;
+    --info-fondo: #f3eadb;
+    --butaca-libre: #fffdf8;
+    --butaca-libre-borde: #7d6a62;
+    --butaca-ocupada: #cfc4b8;
+    --butaca-ocupada-texto: #4a3d38;
+    --butaca-bloqueada-a: #e8c9cf;
+    --butaca-bloqueada-b: #f6e6e9;
+    --butaca-bloqueada-borde: #9c5a68;
+    --butaca-inhabilitada: #a8988e;
+    --sombra: 0 10px 30px -14px rgba(60, 30, 20, 0.35);
+  }
+}
+
+:root[data-tema='claro'] {
+  color-scheme: light;
+  --fondo: #faf5ec;
+  --superficie: #fffdf8;
+  --superficie-2: #f3eadb;
+  --superficie-3: #eadfcc;
+  --linea: #e2d5c3;
+  --linea-fuerte: #c4b3a0;
+  --texto: #24161b;
+  --texto-2: #5e4b45;
+  --texto-invertido: #fffdf8;
+  --oro-texto: #86600f;
+  --brillo-oro: 0 0 0 1px rgba(156, 116, 40, 0.35), 0 6px 18px -6px rgba(156, 116, 40, 0.5);
+  --petroleo-texto: #1d6357;
+  --petroleo-fondo: #e3f3ef;
+  --brillo-petroleo: 0 0 0 1px rgba(42, 122, 109, 0.45), 0 0 14px rgba(42, 122, 109, 0.35);
+  --senal: #b3261e;
+  --senal-fondo: #fce8e6;
+  --senal-borde: #d4473d;
+  --aviso: #7a5208;
+  --aviso-fondo: #fbf0d6;
+  --info-fondo: #f3eadb;
+  --butaca-libre: #fffdf8;
+  --butaca-libre-borde: #7d6a62;
+  --butaca-ocupada: #cfc4b8;
+  --butaca-ocupada-texto: #4a3d38;
+  --butaca-bloqueada-a: #e8c9cf;
+  --butaca-bloqueada-b: #f6e6e9;
+  --butaca-bloqueada-borde: #9c5a68;
+  --butaca-inhabilitada: #a8988e;
+  --sombra: 0 10px 30px -14px rgba(60, 30, 20, 0.35);
+}
