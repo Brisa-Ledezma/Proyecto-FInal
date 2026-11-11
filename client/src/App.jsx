@@ -7,6 +7,7 @@ import DetallePelicula from './paginas/publico/DetallePelicula.jsx';
 import Verificar from './paginas/publico/Verificar.jsx';
 import Privacidad from './paginas/publico/Privacidad.jsx';
 import GuiaEstilos from './paginas/GuiaEstilos.jsx';
+import SeleccionButacas from './paginas/espectador/SeleccionButacas.jsx';
 import { NoEncontrada } from './paginas/SinPermiso.jsx';
 
 const ESPECTADOR = ['ESPECTADOR'];
@@ -26,7 +27,9 @@ export default function App() {
         <Route path="/guia-de-estilos" element={<GuiaEstilos />} />
 
         {/* Espectador */}
-        <Route element={<RutaProtegida roles={ESPECTADOR} />} />
+        <Route element={<RutaProtegida roles={ESPECTADOR} />}>
+          <Route path="/funcion/:id" element={<SeleccionButacas />} />
+        </Route>
 
         {/* Encargado de sala */}
         <Route element={<RutaProtegida roles={ENCARGADO} />} />
