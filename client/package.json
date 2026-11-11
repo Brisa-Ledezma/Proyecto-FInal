@@ -14,6 +14,7 @@
     "@fontsource/cinzel": "^5.1.1",
     "@fontsource/figtree": "^5.1.2",
     "@fontsource/oswald": "^5.1.1",
+    "@phosphor-icons/react": "^2.1.7",
     "html5-qrcode": "^2.3.8",
     "qrcode": "^1.5.4",
     "react": "^18.3.1",

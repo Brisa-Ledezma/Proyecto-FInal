@@ -1,0 +1,39 @@
+.esqueleto {
+  display: block;
+  border-radius: var(--r-chico);
+  background: linear-gradient(90deg, var(--superficie-2) 0%, var(--superficie-3) 50%, var(--superficie-2) 100%);
+  background-size: 200% 100%;
+  animation: pulso-carga 1.4s ease-in-out infinite;
+}
+@keyframes pulso-carga { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+
+.cargando {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: var(--e-7) var(--e-4);
+  color: var(--texto-2);
+}
+.cargando__rollo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid var(--oro);
+  border-top-color: transparent;
+  animation: girar 0.8s linear infinite;
+}
+
+.vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: var(--e-7) var(--e-4);
+  text-align: center;
+  border: 1px dashed var(--linea-fuerte);
+  border-radius: var(--r-medio);
+}
+.vacio__icono { font-size: 44px; color: var(--oro-texto); }
+.vacio__titulo { font-weight: 700; font-size: var(--t-medio); }
+.vacio__texto { color: var(--texto-2); max-width: 46ch; }

@@ -1,0 +1,48 @@
+.modal {
+  width: min(100% - 32px, 560px);
+  max-height: min(100dvh - 32px, 900px);
+  padding: 0;
+  border: 1px solid var(--oro-hondo);
+  border-radius: var(--r-grande);
+  background: var(--superficie);
+  color: var(--texto);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+}
+.modal--chico { width: min(100% - 32px, 440px); }
+.modal--grande { width: min(100% - 32px, 820px); }
+.modal::backdrop { background: rgba(10, 4, 6, 0.72); backdrop-filter: blur(3px); }
+.modal[open] { animation: aparecer 0.22s ease both; }
+
+.modal__panel { display: flex; flex-direction: column; max-height: inherit; }
+.modal__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-4);
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--linea);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--telon) 30%, transparent), transparent);
+}
+.modal__titulo { font-family: var(--f-display); font-size: 1.375rem; font-weight: 600; color: var(--oro-texto); }
+.modal__cerrar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--linea);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+}
+.modal__cerrar:hover { border-color: var(--oro); }
+.modal__cuerpo { padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: var(--e-4); }
+.modal__pie {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--e-3);
+  padding: 16px 20px;
+  border-top: 1px solid var(--linea);
+}

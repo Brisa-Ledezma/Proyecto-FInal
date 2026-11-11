@@ -1,0 +1,120 @@
+.boton {
+  --muesca: 9px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  border-radius: var(--r-chico);
+  font-family: var(--f-rotulo);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform var(--transicion), background-color var(--transicion), border-color var(--transicion), color var(--transicion), box-shadow var(--transicion);
+}
+.boton:active:not(:disabled) { transform: translateY(1px) scale(0.99); }
+.boton:disabled { cursor: not-allowed; }
+.boton--ancho { width: 100%; }
+.boton--chico { min-height: 38px; padding: 6px 14px; font-size: 0.875rem; }
+.boton__icono { display: inline-flex; font-size: 1.15em; }
+
+/* Ticket: muescas a los costados, troquel y brillo metálico que recorre el botón */
+.boton--ticket {
+  padding: 12px 28px 12px 42px;
+  color: #1a1004;
+  background: var(--oro-metal);
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  border: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  isolation: isolate;
+  -webkit-mask:
+    radial-gradient(circle var(--muesca) at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--muesca) at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+          mask:
+    radial-gradient(circle var(--muesca) at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--muesca) at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+  filter: drop-shadow(0 4px 14px rgba(214, 168, 78, 0.35));
+  transition: background-position 0.6s ease, transform var(--transicion), filter var(--transicion);
+}
+.boton--ticket::before {
+  content: '';
+  position: absolute;
+  left: 25px;
+  top: 9px;
+  bottom: 9px;
+  border-left: 2px dashed rgba(26, 16, 4, 0.4);
+}
+.boton--ticket::after {
+  content: '';
+  position: absolute;
+  inset: -20% auto -20% -40%;
+  width: 34%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+  transform: skewX(-18deg) translateX(-120%);
+  z-index: -1;
+  pointer-events: none;
+}
+.boton--ticket:hover:not(:disabled) { background-position: 100% 50%; filter: drop-shadow(0 6px 20px rgba(241, 213, 146, 0.55)); }
+.boton--ticket:hover:not(:disabled)::after { animation: barrido 0.9s ease; }
+.boton--ticket:focus-visible { outline: none; box-shadow: inset 0 0 0 3px #1a1004, inset 0 0 0 5px #fff6dc; }
+.boton--ticket:disabled { background: var(--superficie-3); color: var(--texto-2); filter: none; }
+.boton--ticket:disabled::before { border-color: var(--linea-fuerte); }
+
+@keyframes barrido {
+  from { transform: skewX(-18deg) translateX(-120%); }
+  to { transform: skewX(-18deg) translateX(520%); }
+}
+
+.boton--secundario {
+  background: transparent;
+  border-color: var(--linea-fuerte);
+  color: var(--texto);
+}
+.boton--secundario:hover:not(:disabled) { border-color: var(--oro); color: var(--oro-texto); }
+.boton--secundario:disabled { opacity: 0.55; }
+
+.boton--texto {
+  min-height: 40px;
+  padding: 6px 4px;
+  border: 0;
+  background: none;
+  color: var(--oro-texto);
+  font-family: var(--f-texto);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.boton--texto:hover:not(:disabled) { text-decoration: underline; text-underline-offset: 4px; }
+
+.boton--peligro {
+  background: transparent;
+  border-color: var(--senal-borde);
+  color: var(--senal);
+}
+.boton--peligro:hover:not(:disabled) { background: var(--senal-fondo); }
+
+.boton--cargando .boton__texto { opacity: 0.6; }
+.boton--cargando::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: girar 0.7s linear infinite;
+}
+.boton--ticket.boton--cargando::before {
+  position: static;
+  border-left: 2px solid currentColor;
+}
+@keyframes girar { to { transform: rotate(360deg); } }

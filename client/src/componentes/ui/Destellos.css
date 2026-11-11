@@ -1,0 +1,16 @@
+.destellos { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.destellos__punto {
+  position: absolute;
+  opacity: 0;
+  background: var(--oro-claro);
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  filter: drop-shadow(0 0 6px rgba(251, 231, 168, 0.95));
+  animation: destello 3.8s ease-in-out infinite;
+}
+.destellos--petroleo .destellos__punto {
+  background: #9ff0df;
+  filter: drop-shadow(0 0 6px rgba(127, 224, 205, 0.95));
+}
+@media (prefers-reduced-motion: reduce) {
+  .destellos__punto { opacity: 0.6; transform: scale(0.8); animation: none; }
+}

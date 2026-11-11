@@ -1,0 +1,58 @@
+.campo { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.campo__etiqueta { font-weight: 600; font-size: 0.9375rem; }
+.campo__opcional { font-weight: 400; color: var(--texto-2); }
+
+.campo__control {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px 12px;
+  font-size: 1rem;
+  color: var(--texto);
+  background: var(--fondo);
+  border: 1px solid var(--linea-fuerte);
+  border-radius: var(--r-chico);
+  transition: border-color var(--transicion), box-shadow var(--transicion);
+}
+.campo__control::placeholder { color: var(--texto-2); opacity: 0.8; }
+.campo__control:hover { border-color: var(--texto-2); }
+.campo__control:focus { outline: none; border-color: var(--oro); box-shadow: 0 0 0 3px rgba(214, 168, 78, 0.3); }
+.campo__control:disabled { opacity: 0.6; cursor: not-allowed; }
+.campo__control--textarea { min-height: 120px; resize: vertical; line-height: 1.5; }
+.campo__control--select {
+  appearance: none;
+  padding-right: 40px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--texto-2) 50%), linear-gradient(135deg, var(--texto-2) 50%, transparent 50%);
+  background-position: calc(100% - 20px) 50%, calc(100% - 14px) 50%;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+input[type='date'].campo__control, input[type='time'].campo__control { min-height: 46px; }
+
+.campo--error .campo__control { border-color: var(--senal-borde); }
+.campo--error .campo__control:focus { box-shadow: 0 0 0 3px rgba(255, 133, 119, 0.25); }
+
+.campo__ayuda { font-size: var(--t-chico); color: var(--texto-2); }
+.campo__error {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  font-size: var(--t-chico);
+  color: var(--senal);
+  font-weight: 500;
+}
+.campo__error svg { flex: none; margin-top: 2px; }
+
+.casilla { display: flex; flex-direction: column; gap: 6px; }
+.casilla__etiqueta { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; line-height: 1.5; }
+.casilla__etiqueta input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--oro);
+}
+
+.formulario { display: flex; flex-direction: column; gap: var(--e-4); }
+.formulario__fila { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: var(--e-4); }
+.formulario__acciones { display: flex; flex-wrap: wrap; gap: var(--e-3); align-items: center; justify-content: flex-end; margin-top: var(--e-2); }

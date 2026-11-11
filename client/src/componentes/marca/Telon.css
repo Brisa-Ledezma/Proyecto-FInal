@@ -1,0 +1,57 @@
+.telon-escena {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(ellipse 70% 100% at 50% 110%, #3a2414 0%, #140b0d 60%, #0c0709 100%);
+  color: #f4ebdd;
+  isolation: isolate;
+}
+.telon-escena__bambalina {
+  position: relative;
+  z-index: 3;
+  height: 30px;
+  background: linear-gradient(180deg, var(--telon-hondo), var(--telon));
+  border-bottom: 3px solid var(--oro);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+}
+.telon-escena__festones {
+  position: relative;
+  z-index: 3;
+  height: 16px;
+  margin-top: -1px;
+  background: radial-gradient(circle at 20px 0, var(--telon) 19px, transparent 20px) 0 0 / 40px 16px repeat-x;
+}
+.telon-escena__pano {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: clamp(36px, 12vw, 170px);
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.35)),
+    repeating-linear-gradient(90deg, var(--telon-hondo) 0 5px, var(--telon) 5px 16px, var(--telon-luz) 16px 20px, var(--telon) 20px 30px);
+  animation: abrir-telon 1.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.telon-escena__pano--izq { left: 0; transform-origin: left center; }
+.telon-escena__pano--der {
+  right: 0;
+  transform-origin: right center;
+  background:
+    linear-gradient(270deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.35)),
+    repeating-linear-gradient(270deg, var(--telon-hondo) 0 5px, var(--telon) 5px 16px, var(--telon-luz) 16px 20px, var(--telon) 20px 30px);
+}
+@keyframes abrir-telon { from { transform: scaleX(1.6); } to { transform: scaleX(1); } }
+
+/* Haz del proyector */
+.telon-escena__luz {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: conic-gradient(from 180deg at 50% -10%, transparent 160deg, rgba(251, 231, 168, 0.1) 175deg, rgba(251, 231, 168, 0.16) 180deg, rgba(251, 231, 168, 0.1) 185deg, transparent 200deg);
+  pointer-events: none;
+}
+.telon-escena__contenido {
+  position: relative;
+  z-index: 1;
+  padding: var(--e-6) clamp(48px, 14vw, 190px) var(--e-7);
+}
+.telon-escena--compacto .telon-escena__contenido { padding-block: var(--e-5) var(--e-6); }
