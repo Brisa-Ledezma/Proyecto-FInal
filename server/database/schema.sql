@@ -84,6 +84,7 @@ CREATE TABLE reserva (
   fecha_hora_creacion  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   estado               ENUM('PENDIENTE_PAGO','CONFIRMADA','CANCELADA','ANULADA') NOT NULL DEFAULT 'PENDIENTE_PAGO',
   total                DECIMAL(10,2) NOT NULL,                      -- RN-05
+  vence_pago           DATETIME     NULL,                           -- RN-02: temporizador de pago de 5 minutos
   fecha_hora_cierre    DATETIME     NULL,                           -- confirmación, cancelación o anulación
   KEY ix_reserva_usuario (id_usuario, estado),
   KEY ix_reserva_funcion (id_funcion, estado),
