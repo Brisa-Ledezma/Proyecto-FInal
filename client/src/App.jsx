@@ -11,6 +11,7 @@ import SeleccionButacas from './paginas/espectador/SeleccionButacas.jsx';
 import Pago from './paginas/espectador/Pago.jsx';
 import Confirmacion from './paginas/espectador/Confirmacion.jsx';
 import MisEntradas from './paginas/espectador/MisEntradas.jsx';
+import ControlIngreso from './paginas/encargado/ControlIngreso.jsx';
 import { NoEncontrada } from './paginas/SinPermiso.jsx';
 
 const ESPECTADOR = ['ESPECTADOR'];
@@ -38,7 +39,9 @@ export default function App() {
         </Route>
 
         {/* Encargado de sala */}
-        <Route element={<RutaProtegida roles={ENCARGADO} />} />
+        <Route element={<RutaProtegida roles={ENCARGADO} />}>
+          <Route path="/control" element={<ControlIngreso />} />
+        </Route>
 
         {/* Administración */}
         <Route element={<RutaProtegida roles={ADMIN} />} />
