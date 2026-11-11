@@ -2,6 +2,8 @@ import { Route, Routes } from 'react-router-dom';
 import Layout from './componentes/layout/Layout.jsx';
 import RutaProtegida from './componentes/layout/RutaProtegida.jsx';
 import Acceso from './paginas/publico/Acceso.jsx';
+import Cartelera from './paginas/publico/Cartelera.jsx';
+import DetallePelicula from './paginas/publico/DetallePelicula.jsx';
 import Verificar from './paginas/publico/Verificar.jsx';
 import Privacidad from './paginas/publico/Privacidad.jsx';
 import GuiaEstilos from './paginas/GuiaEstilos.jsx';
@@ -16,7 +18,8 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         {/* Públicas */}
-        <Route path="/" element={<GuiaEstilos />} />
+        <Route path="/" element={<Cartelera />} />
+        <Route path="/pelicula/:id" element={<DetallePelicula />} />
         <Route path="/acceso" element={<Acceso />} />
         <Route path="/verificar/:token" element={<Verificar />} />
         <Route path="/privacidad" element={<Privacidad />} />
