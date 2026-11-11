@@ -42,4 +42,4 @@
 .afiche__marca { margin-top: 10%; font-family: var(--f-rotulo); font-size: 0.6875rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(241, 213, 146, 0.75); }
 .afiche--chico.afiche--provisorio { padding: 8px; }
 .afiche--chico .afiche__genero, .afiche--chico .afiche__marca { display: none; }
-.afiche--chico .afiche__titulo { font-size: 0.6875rem; }
+.afiche--chico .afiche__titulo { font-size: 0.5625rem; overflow-wrap: normal; hyphens: none; }

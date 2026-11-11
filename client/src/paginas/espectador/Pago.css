@@ -1,0 +1,39 @@
+.pago__grilla { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--e-5); align-items: start; }
+.pago__panel { padding: var(--e-5); display: flex; flex-direction: column; gap: var(--e-5); min-width: 0; }
+.pago__reloj { display: flex; align-items: center; gap: var(--e-4); padding-bottom: var(--e-4); border-bottom: 1px solid var(--linea); }
+.pago__reloj > div { display: flex; flex-direction: column; gap: 4px; }
+
+.pago__medios, .pago__cuentas { border: 0; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: var(--e-3); }
+.pago__medios legend, .pago__cuentas legend { margin-bottom: 8px; }
+.pago__medio, .pago__cuenta {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1.5px solid var(--linea-fuerte);
+  border-radius: var(--r-medio);
+  background: var(--fondo);
+  cursor: pointer;
+  transition: border-color var(--transicion), box-shadow var(--transicion);
+}
+.pago__medio input, .pago__cuenta input { accent-color: var(--oro); width: 18px; height: 18px; flex: none; }
+.pago__medio > svg { font-size: 30px; color: var(--oro-texto); flex: none; }
+.pago__medio span, .pago__cuenta span { display: flex; flex-direction: column; line-height: 1.3; }
+.pago__medio span span { font-size: var(--t-chico); color: var(--texto-2); }
+.pago__medio--activo, .pago__cuenta--activa { border-color: var(--oro); box-shadow: var(--brillo-oro); }
+.pago__medio:focus-within, .pago__cuenta:focus-within { outline: 3px solid var(--oro-claro); outline-offset: 2px; }
+
+.pago__seguro { display: flex; align-items: center; gap: 8px; color: var(--texto-2); font-size: var(--t-chico); }
+.pago__cancelar { align-self: center; color: var(--senal); }
+
+.pago__prueba { padding: 12px 14px; border: 1px dashed var(--linea-fuerte); border-radius: var(--r-chico); font-size: var(--t-chico); color: var(--texto-2); }
+.pago__prueba summary { cursor: pointer; font-weight: 600; color: var(--texto); }
+.pago__prueba p { margin-top: 8px; }
+.pago__prueba ul { margin-top: 6px; padding-left: 1.2em; display: flex; flex-direction: column; gap: 4px; }
+
+@media (max-width: 900px) {
+  .pago__grilla { grid-template-columns: 1fr; }
+  .pago__grilla .resumen-compra { position: static; order: -1; }
+  .pago__panel { padding: var(--e-4); }
+}
