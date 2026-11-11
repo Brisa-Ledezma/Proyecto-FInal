@@ -1,0 +1,25 @@
+.confirmacion__hero { position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--e-3); text-align: center; }
+.confirmacion__hero p { max-width: 56ch; color: #e9dccb; }
+.confirmacion__sello {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--petroleo-metal);
+  color: #f6fffc;
+  font-family: var(--f-rotulo);
+  font-size: 0.8125rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  box-shadow: var(--brillo-petroleo);
+}
+.confirmacion__titulo { font-family: var(--f-display); font-size: var(--t-hero); font-weight: 700; }
+
+.confirmacion__entradas { display: flex; flex-direction: column; gap: var(--e-4); }
+.confirmacion__lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); gap: var(--e-5); justify-items: center; }
+.confirmacion__lista .entrada-digital:nth-child(2) { animation-delay: 0.5s; }
+.confirmacion__lista .entrada-digital:nth-child(3) { animation-delay: 0.7s; }
+
+.confirmacion__pie { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--e-5); align-items: center; padding: var(--e-5); }
+.confirmacion__pie > div:first-child { display: flex; flex-direction: column; gap: 2px; }
+.confirmacion__total { font-size: 2rem; font-weight: 500; }
+.confirmacion__acciones { display: flex; flex-wrap: wrap; gap: var(--e-3); }
+@media (max-width: 900px) { .confirmacion__pie { grid-template-columns: 1fr; } }

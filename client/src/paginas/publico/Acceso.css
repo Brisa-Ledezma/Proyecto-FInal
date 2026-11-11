@@ -1,0 +1,92 @@
+.acceso { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); }
+
+.acceso__escena {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--e-7) var(--e-6);
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.45), transparent 30%, transparent 70%, rgba(0, 0, 0, 0.45)),
+    repeating-linear-gradient(90deg, var(--telon-hondo) 0 6px, var(--telon) 6px 20px, var(--telon-luz) 20px 25px, var(--telon) 25px 38px);
+}
+.acceso__escena::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 45%, rgba(20, 8, 10, 0.85), rgba(20, 8, 10, 0.2) 70%, transparent);
+}
+.acceso__escena-contenido { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: var(--e-5); text-align: center; }
+.acceso__lema { max-width: 30ch; font-size: var(--t-medio); color: #f4ebdd; }
+
+.acceso__panel { display: flex; align-items: flex-start; justify-content: center; padding: var(--e-7) var(--e-4); }
+
+/* Ventanilla de boletería: tarjeta con arco superior */
+.ventanilla {
+  position: relative;
+  width: min(100%, 480px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+  padding: 76px clamp(18px, 4vw, 36px) var(--e-6);
+  background: var(--superficie);
+  border: 2px solid var(--oro-hondo);
+  border-radius: 240px 240px var(--r-grande) var(--r-grande) / 120px 120px var(--r-grande) var(--r-grande);
+  box-shadow: var(--sombra), inset 0 0 0 6px var(--superficie), inset 0 0 0 7px var(--linea);
+}
+.ventanilla__arco {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  width: 120px;
+  height: 22px;
+  margin-left: -60px;
+  border-radius: 999px;
+  background: repeating-linear-gradient(90deg, var(--oro-hondo) 0 3px, transparent 3px 12px);
+  opacity: 0.6;
+}
+.ventanilla__titulo { text-align: center; font-family: var(--f-display); font-size: var(--t-titulo); color: var(--oro-texto); font-weight: 600; }
+.ventanilla__pestanas { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 999px; background: var(--superficie-2); }
+.ventanilla__pestanas button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--texto-2);
+  font-weight: 600;
+  cursor: pointer;
+}
+.ventanilla__pestanas button[aria-selected='true'] { background: var(--telon); color: #fff6dc; box-shadow: var(--brillo-oro); }
+
+.acceso__contrasena { position: relative; }
+.acceso__ver {
+  position: absolute;
+  right: 6px;
+  top: 33px;
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: none;
+  color: var(--texto-2);
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+.acceso__contrasena .campo__control { padding-right: 48px; }
+.acceso__cambio { text-align: center; color: var(--texto-2); }
+
+.acceso__enviado { display: flex; flex-direction: column; align-items: center; gap: var(--e-3); text-align: center; padding-block: var(--e-4); }
+.acceso__enviado-icono { font-size: 56px; color: var(--oro-texto); }
+.acceso__enviado-acciones { display: flex; flex-wrap: wrap; gap: var(--e-3); justify-content: center; margin-top: var(--e-2); }
+
+@media (max-width: 880px) {
+  .acceso { grid-template-columns: 1fr; }
+  .acceso__escena { padding: var(--e-5) var(--e-4); }
+  .acceso__escena .logo-completo { width: 180px; }
+  .acceso__lema { font-size: var(--t-base); }
+  .acceso__panel { padding-top: var(--e-5); }
+}

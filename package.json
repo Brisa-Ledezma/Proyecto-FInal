@@ -1,0 +1,23 @@
+{
+  "name": "golden-screen",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema web de venta y reserva de entradas para un cine multisala",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c yellow,magenta \"npm run dev -w server\" \"npm run dev -w client\"",
+    "dev:movil": "concurrently -k -n api,web -c yellow,magenta \"npm run dev -w server\" \"npm run dev:movil -w client\"",
+    "db:setup": "npm run db:setup -w server",
+    "build": "npm run build -w client",
+    "start": "npm run start -w server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

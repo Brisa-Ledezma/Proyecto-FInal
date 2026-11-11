@@ -1,0 +1,19 @@
+.reportes__filtros { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: var(--e-3); padding: var(--e-4); align-items: start; }
+.reportes__contenido { display: flex; flex-direction: column; gap: var(--e-5); }
+
+.reporte-cifra { display: flex; flex-direction: column; gap: 2px; padding: var(--e-4); border: 1px solid var(--linea); border-left: 3px solid var(--oro); border-radius: var(--r-medio); background: var(--superficie); }
+.reporte-cifra strong { font-size: clamp(1.4rem, 1rem + 1vw, 1.9rem); font-weight: 500; }
+
+.reporte-panel { padding: var(--e-5); display: flex; flex-direction: column; gap: var(--e-4); min-width: 0; }
+.reporte-detalle { display: flex; flex-direction: column; gap: var(--e-3); }
+.reporte-detalle__cabecera { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--e-3); }
+.reporte-total { display: flex; justify-content: space-between; align-items: baseline; padding: var(--e-4); border-top: 2px solid var(--oro); }
+.reporte-total span { font-family: var(--f-rotulo); letter-spacing: 0.12em; text-transform: uppercase; color: var(--texto-2); }
+.reporte-total strong { font-size: 1.75rem; font-weight: 500; }
+
+.encabezado-pagina > .reporte-pestanas { flex-direction: row; }
+.reporte-pestanas { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--superficie-2); }
+.reporte-pestanas button { min-height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: var(--texto-2); font-weight: 600; cursor: pointer; }
+.reporte-pestanas button[aria-selected='true'] { background: var(--telon); color: #fff6dc; box-shadow: var(--brillo-oro); }
+.reporte-pestanas--grandes button { min-height: 46px; padding: 0 22px; font-size: 1rem; }
+.col-ocupacion { min-width: 200px; }

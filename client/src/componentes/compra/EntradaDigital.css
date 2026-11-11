@@ -1,0 +1,57 @@
+/* La entrada es de papel marfil en ambos temas, con troquel y muescas. */
+.entrada-digital {
+  --talon: 176px;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--talon);
+  width: 100%;
+  max-width: 600px;
+  color: #24161b;
+  background:
+    linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%) -200% 0 / 200% 100% no-repeat,
+    linear-gradient(180deg, #fffaf0, #f4ebdd);
+  border-radius: var(--r-medio);
+  -webkit-mask:
+    radial-gradient(circle 12px at calc(100% - var(--talon)) 0, transparent 98%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle 12px at calc(100% - var(--talon)) 100%, transparent 98%, #000) bottom / 100% 51% no-repeat;
+          mask:
+    radial-gradient(circle 12px at calc(100% - var(--talon)) 0, transparent 98%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle 12px at calc(100% - var(--talon)) 100%, transparent 98%, #000) bottom / 100% 51% no-repeat;
+  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.35));
+  animation: brillo-entrada 1.4s ease 0.3s both;
+}
+@keyframes brillo-entrada { from { background-position: -200% 0, 0 0; } to { background-position: 200% 0, 0 0; } }
+
+.entrada-digital::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  background: var(--oro-metal);
+  border-radius: var(--r-medio) 0 0 var(--r-medio);
+}
+.entrada-digital__cuerpo { display: flex; flex-direction: column; gap: 10px; padding: 18px 18px 16px 26px; border-right: 2px dashed rgba(36, 22, 27, 0.25); min-width: 0; }
+.entrada-digital__cabecera { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.entrada-digital__cine { font-family: var(--f-rotulo); font-size: 0.75rem; letter-spacing: 0.24em; text-transform: uppercase; color: #6e4f22; }
+.entrada-digital__titulo { font-family: var(--f-display); font-size: 1.5rem; color: #5c1224; line-height: 1.1; }
+.entrada-digital__datos { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 12px; }
+.entrada-digital__datos div { display: flex; flex-direction: column; }
+.entrada-digital__datos dt { font-family: var(--f-rotulo); font-size: 0.6875rem; letter-spacing: 0.16em; text-transform: uppercase; color: #6e5c56; }
+.entrada-digital__datos dd { margin: 0; font-weight: 600; }
+.entrada-digital__grande { font-family: var(--f-rotulo); font-size: 1.5rem; line-height: 1.1; color: #5c1224; }
+
+.entrada-digital__talon { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 14px; }
+.entrada-digital__qr { width: 132px; height: 132px; border-radius: 4px; background: #fbf4e6; image-rendering: pixelated; }
+.entrada-digital__codigo { font-size: 1rem; letter-spacing: 0.1em; color: #24161b; }
+
+.entrada-digital--inactiva { filter: grayscale(0.85) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.25)); }
+.entrada-digital--inactiva .entrada-digital__qr { opacity: 0.35; }
+
+@media (max-width: 520px) {
+  .entrada-digital { grid-template-columns: 1fr; -webkit-mask: none; mask: none; }
+  .entrada-digital__cuerpo { border-right: 0; border-bottom: 2px dashed rgba(36, 22, 27, 0.25); }
+  .entrada-digital__datos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .entrada-digital__qr { width: 168px; height: 168px; }
+}

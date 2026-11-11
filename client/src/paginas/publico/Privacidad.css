@@ -1,0 +1,3 @@
+.privacidad__texto { max-width: 70ch; display: flex; flex-direction: column; gap: var(--e-3); }
+.privacidad__texto h2 { margin-top: var(--e-4); font-size: var(--t-medio); color: var(--oro-texto); }
+.privacidad__texto ul { padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; }

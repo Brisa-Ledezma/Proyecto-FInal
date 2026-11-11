@@ -1,0 +1,10 @@
+.reloj-pago { position: relative; width: 104px; height: 104px; flex: none; }
+.reloj-pago svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.reloj-pago circle { fill: none; stroke-width: 7; }
+.reloj-pago__fondo { stroke: var(--linea); }
+.reloj-pago__arco { stroke: var(--oro); stroke-linecap: round; transition: stroke-dashoffset 0.25s linear; filter: drop-shadow(0 0 4px rgba(241, 213, 146, 0.7)); }
+.reloj-pago__texto { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.reloj-pago__texto strong { font-size: 1.625rem; font-weight: 500; line-height: 1; }
+.reloj-pago__texto span { font-family: var(--f-rotulo); font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--texto-2); }
+.reloj-pago--urgente .reloj-pago__arco { stroke: var(--senal); filter: drop-shadow(0 0 4px rgba(255, 133, 119, 0.7)); }
+.reloj-pago--urgente .reloj-pago__texto strong { color: var(--senal); }

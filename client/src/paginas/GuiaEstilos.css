@@ -1,0 +1,7 @@
+.guia__hero { display: flex; flex-direction: column; align-items: center; gap: var(--e-3); text-align: center; }
+.guia__bloque { display: flex; flex-direction: column; gap: var(--e-4); }
+.guia__fila { display: flex; flex-wrap: wrap; gap: var(--e-3); align-items: center; }
+.guia__dos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: var(--e-5); align-items: start; }
+.guia__form { padding: var(--e-5); }
+.guia__avisos { display: flex; flex-direction: column; gap: var(--e-3); }
+.guia__brillo { position: relative; padding: var(--e-7) var(--e-4); align-items: center; border-radius: var(--r-grande); background: var(--superficie); border: 1px solid var(--linea); }

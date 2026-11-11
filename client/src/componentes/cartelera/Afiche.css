@@ -1,0 +1,57 @@
+.afiche {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: var(--r-chico);
+  background: var(--superficie-3);
+  box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.7);
+  flex: none;
+  container-type: inline-size;
+  text-decoration: none;
+}
+.afiche img { width: 100%; height: 100%; object-fit: cover; }
+.afiche--chico { width: 64px; }
+.afiche--medio { width: 100%; }
+
+.afiche--provisorio {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 12% 10%;
+  color: #fff6dc;
+  background:
+    radial-gradient(ellipse 120% 70% at 50% 0%, hsl(var(--tono) 55% 32% / 0.95), transparent 70%),
+    linear-gradient(170deg, hsl(var(--tono) 45% 18%), #120a0d 75%);
+  border: 1px solid rgba(214, 168, 78, 0.35);
+}
+.afiche--provisorio::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(241, 213, 146, 0.35);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.afiche__genero { font-family: var(--f-rotulo); font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--oro-claro); }
+.afiche__titulo { font-family: var(--f-display); font-weight: 700; font-size: clamp(0.75rem, 11.5cqi, 1.9rem); line-height: 1.1; text-wrap: balance; overflow-wrap: anywhere; hyphens: auto; }
+.afiche__genero { font-size: clamp(0.5625rem, 6cqi, 0.8125rem); }
+.afiche__marca { font-size: clamp(0.5rem, 5cqi, 0.75rem); }
+.afiche__marca { margin-top: 10%; font-family: var(--f-rotulo); font-size: 0.6875rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(241, 213, 146, 0.75); }
+.afiche--chico.afiche--provisorio { padding: 8px; }
+.afiche--chico .afiche__genero, .afiche--chico .afiche__marca { display: none; }
+.afiche--chico .afiche__titulo { display: none; }
+.afiche--chico.afiche--provisorio::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 40%;
+  aspect-ratio: 1;
+  background: var(--oro-metal);
+  -webkit-mask: radial-gradient(circle at 30% 30%, #000 22%, transparent 23%), radial-gradient(circle at 70% 30%, #000 22%, transparent 23%), linear-gradient(#000, #000) 0 100% / 100% 45% no-repeat;
+          mask: radial-gradient(circle at 30% 30%, #000 22%, transparent 23%), radial-gradient(circle at 70% 30%, #000 22%, transparent 23%), linear-gradient(#000, #000) 0 100% / 100% 45% no-repeat;
+  opacity: 0.8;
+}

@@ -1,0 +1,18 @@
+.estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid;
+  font-family: var(--f-rotulo);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.estado--ok { color: var(--petroleo-texto); background: var(--petroleo-fondo); border-color: var(--petroleo-claro); }
+.estado--pendiente { color: var(--aviso); background: var(--aviso-fondo); border-color: var(--oro); }
+.estado--oro { color: var(--oro-texto); background: transparent; border-color: var(--oro-hondo); }
+.estado--error { color: var(--senal); background: var(--senal-fondo); border-color: var(--senal-borde); }
+.estado--neutro { color: var(--texto-2); background: var(--superficie-2); border-color: var(--linea-fuerte); }
