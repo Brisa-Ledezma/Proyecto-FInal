@@ -25,16 +25,17 @@
 
 .encabezado__barra { display: flex; align-items: center; gap: var(--e-5); min-height: var(--alto-barra); }
 .encabezado__nav { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: var(--e-5); min-width: 0; }
-.encabezado__lista { list-style: none; display: flex; gap: 4px; flex-wrap: wrap; }
+.encabezado__lista { list-style: none; display: flex; gap: 2px; flex-wrap: nowrap; }
 .encabezado__enlace {
   position: relative;
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  padding: 0 12px;
+  padding: 0 10px;
   font-family: var(--f-rotulo);
   font-size: 0.9375rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
   text-transform: uppercase;
   text-decoration: none;
   color: #e9dccb;
@@ -61,6 +62,7 @@
 .encabezado__nombre { font-weight: 600; }
 .encabezado__rol { font-size: 0.8125rem; color: #cdbba6; }
 .encabezado__salir {
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -91,7 +93,12 @@
   cursor: pointer;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1360px) and (min-width: 1241px) {
+  .encabezado__barra { gap: var(--e-4); }
+  .encabezado__rol { display: none; }
+}
+
+@media (max-width: 1240px) {
   .encabezado__barra { justify-content: space-between; }
   .encabezado__hamburguesa { display: inline-flex; }
   .encabezado__nav {
