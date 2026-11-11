@@ -18,6 +18,7 @@ import './componentes/ui/Campo.css';
 
 import { ProveedorTema } from './contexto/TemaContexto.jsx';
 import { ProveedorNotificaciones } from './contexto/NotificacionesContexto.jsx';
+import { ProveedorSesion } from './contexto/SesionContexto.jsx';
 import App from './App.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -25,7 +26,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <ProveedorTema>
         <ProveedorNotificaciones>
-          <App />
+          <ProveedorSesion>
+            <App />
+          </ProveedorSesion>
         </ProveedorNotificaciones>
       </ProveedorTema>
     </BrowserRouter>
