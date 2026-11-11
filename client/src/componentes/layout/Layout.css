@@ -1,0 +1,18 @@
+.layout__principal { flex: 1; display: flex; flex-direction: column; }
+
+.saltar-contenido {
+  position: absolute;
+  left: 16px;
+  top: -60px;
+  z-index: 40;
+  padding: 10px 16px;
+  background: var(--oro);
+  color: #1a1004;
+  font-weight: 700;
+  border-radius: var(--r-chico);
+}
+.saltar-contenido:focus { top: 12px; }
+
+.pie { border-top: 1px solid var(--linea); background: var(--superficie); color: var(--texto-2); font-size: var(--t-chico); }
+.pie__contenido { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--e-3); padding-block: var(--e-5); }
+.pie__enlaces { display: flex; gap: var(--e-4); }
