@@ -43,6 +43,11 @@
   --brillo-petroleo: 0 0 0 1px rgba(127, 224, 205, 0.55), 0 0 16px rgba(95, 194, 176, 0.55);
   --petroleo-fondo: #0f2622;
 
+  /* Gráficos: una sola serie en oro; ocupación en petróleo */
+  --grafico-barra: #d6a84e;
+  --grafico-barra-activa: #f1d592;
+  --grafico-grilla: rgba(185, 170, 156, 0.16);
+
   /* Estados de mensajes */
   --senal: #ff8577;
   --senal-fondo: #3a1414;
@@ -119,6 +124,9 @@
     --butaca-bloqueada-borde: #9c5a68;
     --butaca-inhabilitada: #a8988e;
     --sombra: 0 10px 30px -14px rgba(60, 30, 20, 0.35);
+    --grafico-barra: #9c7428;
+    --grafico-barra-activa: #6e4f14;
+    --grafico-grilla: rgba(94, 75, 69, 0.18);
   }
 }
 
@@ -153,4 +161,7 @@
   --butaca-bloqueada-borde: #9c5a68;
   --butaca-inhabilitada: #a8988e;
   --sombra: 0 10px 30px -14px rgba(60, 30, 20, 0.35);
+  --grafico-barra: #9c7428;
+  --grafico-barra-activa: #6e4f14;
+  --grafico-grilla: rgba(94, 75, 69, 0.18);
 }

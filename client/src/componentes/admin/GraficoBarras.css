@@ -1,0 +1,36 @@
+.grafico-barras { margin: 0; }
+.grafico-barras__lienzo { position: relative; }
+.grafico-barras svg { display: block; max-width: 100%; overflow: visible; }
+.grafico-barras__grilla { stroke: var(--grafico-grilla); stroke-width: 1; }
+.grafico-barras__base { stroke: var(--linea-fuerte); stroke-width: 1; }
+.grafico-barras__eje { fill: var(--texto-2); font-family: var(--f-rotulo); font-size: 12px; }
+.grafico-barras__zona { fill: transparent; }
+.grafico-barras__barra { fill: var(--grafico-barra); transition: fill var(--transicion); }
+.grafico-barras__grupo { cursor: default; outline: none; }
+.grafico-barras__grupo--activo .grafico-barras__barra { fill: var(--grafico-barra-activa); }
+.grafico-barras__grupo--activo .grafico-barras__zona { fill: var(--grafico-grilla); }
+.grafico-barras__grupo:focus-visible .grafico-barras__zona { stroke: var(--oro-claro); stroke-width: 2; }
+
+.grafico-barras__tooltip {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, calc(-100% - 10px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: var(--r-chico);
+  border: 1px solid var(--linea-fuerte);
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+  pointer-events: none;
+  white-space: nowrap;
+  font-size: var(--t-chico);
+}
+.grafico-barras__tooltip span { color: var(--texto-2); }
+.grafico-barras__tooltip strong { font-size: 1.125rem; font-weight: 500; color: var(--texto); }
+
+.medidor { display: inline-flex; align-items: center; gap: 10px; min-width: 150px; width: 100%; }
+.medidor__pista { flex: 1; height: 8px; border-radius: 999px; background: var(--superficie-3); overflow: hidden; }
+.medidor__relleno { display: block; height: 100%; border-radius: 999px; background: var(--petroleo-metal); }
+.medidor__valor { width: 56px; text-align: right; font-size: 0.9375rem; }
