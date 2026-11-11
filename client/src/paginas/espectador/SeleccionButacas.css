@@ -1,0 +1,31 @@
+.seleccion__volver { align-self: flex-start; }
+.seleccion__grilla { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--e-5); align-items: start; }
+.seleccion__mapa { padding: var(--e-5); display: flex; flex-direction: column; gap: var(--e-4); min-width: 0; }
+
+.seleccion__barra { display: none; }
+
+@media (max-width: 900px) {
+  .seleccion__grilla { grid-template-columns: 1fr; }
+  .seleccion__mapa { padding: var(--e-3); }
+  .seleccion .resumen-compra { position: static; }
+  .seleccion__confirmar { display: none; }
+  .seleccion { padding-bottom: 110px; }
+  .seleccion__barra {
+    position: fixed;
+    z-index: 15;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--e-3);
+    padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+    background: var(--superficie);
+    border-top: 2px solid var(--oro);
+    box-shadow: 0 -10px 30px -12px rgba(0, 0, 0, 0.6);
+  }
+  .seleccion__barra > div { display: flex; flex-direction: column; min-width: 0; }
+  .seleccion__barra .texto-2 { font-size: var(--t-chico); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .seleccion__barra-total { font-size: 1.5rem; }
+}

@@ -7,6 +7,7 @@ import { manejadorErrores, rutaNoEncontrada } from './middlewares/errores.js';
 import { cargarUsuario, middlewareSesion } from './middlewares/sesion.js';
 import { rutasAuth } from './modulos/usuarios/auth.rutas.js';
 import { rutasCartelera } from './modulos/cartelera/cartelera.rutas.js';
+import { rutasReservas } from './modulos/reservas/reservas.rutas.js';
 
 const raiz = path.dirname(fileURLToPath(import.meta.url));
 export const carpetaUploads = path.resolve(raiz, '../uploads');
@@ -35,6 +36,7 @@ export function crearApp() {
   app.use('/api', middlewareSesion, cargarUsuario);
   app.use('/api/auth', rutasAuth);
   app.use('/api', rutasCartelera);
+  app.use('/api', rutasReservas);
 
   app.use('/api', rutaNoEncontrada);
 

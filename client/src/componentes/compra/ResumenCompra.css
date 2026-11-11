@@ -1,0 +1,23 @@
+.resumen-compra {
+  position: sticky;
+  top: calc(var(--alto-barra) + 16px);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--linea);
+  border-radius: var(--r-medio);
+  background: var(--superficie);
+  overflow: hidden;
+}
+.resumen-compra > * { padding: 16px 18px; border-bottom: 1px solid var(--linea); }
+.resumen-compra > :last-child { border-bottom: 0; }
+.resumen-compra__funcion { display: flex; gap: 14px; align-items: flex-start; background: linear-gradient(180deg, color-mix(in srgb, var(--telon) 22%, transparent), transparent); }
+.resumen-compra__funcion > div { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; min-width: 0; }
+.resumen-compra__titulo { font-family: var(--f-display); font-size: 1.3rem; color: var(--oro-texto); }
+.resumen-compra__datos { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--texto-2); }
+.resumen-compra__datos li { display: inline-flex; align-items: center; gap: 6px; }
+.resumen-compra__butacas { display: flex; flex-direction: column; gap: 6px; }
+.resumen-compra__lista { font-size: 1.25rem; letter-spacing: 0.04em; }
+.resumen-compra__linea { display: flex; justify-content: space-between; color: var(--texto-2); }
+.resumen-compra__total { display: flex; justify-content: space-between; align-items: baseline; }
+.resumen-compra__total strong { font-size: 2rem; font-weight: 500; }
+.resumen-compra__acciones { display: flex; flex-direction: column; gap: var(--e-3); }
