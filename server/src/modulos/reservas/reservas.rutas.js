@@ -140,6 +140,40 @@ rutasReservas.post('/reservas', requerirRol(ROLES.ESPECTADOR), manejar(async (re
   res.status(201).json({ ...resultado, minutosSesion: config.reglas.minutosSesion });
 }));
 
+/** RF-09 · CU-07: reservas del espectador, primero las próximas. */
+rutasReservas.get('/reservas', requerirRol(ROLES.ESPECTADOR), manejar(async (req, res) => {
+  const filas = await consultar(
+    `SELECT r.id_reserva, r.estado, r.total, r.fecha_hora_creacion,
+            f.id_funcion, f.fecha_hora_inicio, f.fecha_hora_fin, f.estado AS estado_funcion, f.precio,
+            f.fecha_hora_fin > NOW() AS vigente,
+            p.id_pelicula, p.titulo, p.clasificacion, p.duracion_min, p.afiche, p.genero,
+            s.id_sala, s.nombre AS sala,
+            (SELECT GROUP_CONCAT(CONCAT(fi.letra, b.numero) ORDER BY fi.orden, b.numero SEPARATOR ' · ')
+               FROM reserva_butaca rb JOIN butaca b ON b.id_butaca = rb.id_butaca JOIN fila fi ON fi.id_fila = b.id_fila
+              WHERE rb.id_reserva = r.id_reserva) AS butacas,
+            (SELECT COUNT(*) FROM reserva_butaca rb WHERE rb.id_reserva = r.id_reserva) AS cantidad
+       FROM reserva r
+       JOIN funcion f ON f.id_funcion = r.id_funcion
+       JOIN pelicula p ON p.id_pelicula = f.id_pelicula
+       JOIN sala s ON s.id_sala = f.id_sala
+      WHERE r.id_usuario = ?
+      ORDER BY (f.fecha_hora_fin > NOW()) DESC,
+               CASE WHEN f.fecha_hora_fin > NOW() THEN f.fecha_hora_inicio END ASC,
+               f.fecha_hora_inicio DESC`,
+    [req.usuario.id_usuario],
+  );
+  res.json(filas.map((r) => ({
+    id: r.id_reserva,
+    estado: r.estado,
+    total: Number(r.total),
+    creada: r.fecha_hora_creacion,
+    proxima: Boolean(r.vigente),
+    butacas: r.butacas ?? '',
+    cantidad: r.cantidad,
+    funcion: resumenFuncion({ ...r, sala: r.sala, no_iniciada: r.vigente, estado: r.estado_funcion }),
+  })));
+}));
+
 /** Detalle de una reserva propia (pago, confirmación y Mis entradas). */
 rutasReservas.get('/reservas/:id', requerirRol(ROLES.ESPECTADOR), manejar(async (req, res) => {
   const id = idValido(req.params.id);

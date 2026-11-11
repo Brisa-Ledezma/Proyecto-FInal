@@ -1,0 +1,56 @@
+.encabezado-pagina > .mis-entradas__pestanas { flex-direction: row; }
+.mis-entradas__pestanas { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--superficie-2); }
+.mis-entradas__pestanas button {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--texto-2);
+  font-weight: 600;
+  cursor: pointer;
+}
+.mis-entradas__pestanas button[aria-selected='true'] { background: var(--telon); color: #fff6dc; box-shadow: var(--brillo-oro); }
+
+.mis-entradas__lista { list-style: none; display: flex; flex-direction: column; gap: var(--e-3); }
+
+/* Talonario: cada reserva con la muesca de una entrada */
+.talon-reserva {
+  position: relative;
+  padding: var(--e-4) var(--e-5) var(--e-4) calc(var(--e-5) + 6px);
+  border: 1px solid var(--linea);
+  border-left: 4px solid var(--oro);
+  border-radius: var(--r-medio);
+  background: var(--superficie);
+}
+.talon-reserva::before, .talon-reserva::after {
+  content: '';
+  position: absolute;
+  left: -10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--fondo);
+  border: 1px solid var(--linea);
+}
+.talon-reserva::before { top: 18px; }
+.talon-reserva::after { bottom: 18px; }
+.talon-reserva--pendiente_pago { border-left-color: var(--oro-claro); }
+.talon-reserva--cancelada, .talon-reserva--anulada { border-left-color: var(--linea-fuerte); }
+.talon-reserva--pasada { opacity: 0.85; }
+
+.talon-reserva__fila { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: var(--e-4); align-items: center; }
+.talon-reserva__info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.talon-reserva__titulo { font-family: var(--f-display); font-size: 1.25rem; }
+.talon-reserva__butacas { font-size: 1rem; }
+.talon-reserva__acciones { display: flex; flex-direction: column; align-items: flex-end; gap: var(--e-2); }
+.talon-reserva__botones { display: flex; align-items: center; gap: var(--e-2); }
+.girado { transform: rotate(180deg); }
+
+.mis-entradas__entradas { display: flex; flex-wrap: wrap; gap: var(--e-4); margin-top: var(--e-4); padding-top: var(--e-4); border-top: 1px dashed var(--linea-fuerte); }
+
+@media (max-width: 620px) {
+  .talon-reserva { padding: var(--e-4) var(--e-4) var(--e-4) calc(var(--e-4) + 6px); }
+  .talon-reserva__fila { grid-template-columns: 56px minmax(0, 1fr); }
+  .talon-reserva__acciones { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+}

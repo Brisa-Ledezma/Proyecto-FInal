@@ -10,6 +10,7 @@ import GuiaEstilos from './paginas/GuiaEstilos.jsx';
 import SeleccionButacas from './paginas/espectador/SeleccionButacas.jsx';
 import Pago from './paginas/espectador/Pago.jsx';
 import Confirmacion from './paginas/espectador/Confirmacion.jsx';
+import MisEntradas from './paginas/espectador/MisEntradas.jsx';
 import { NoEncontrada } from './paginas/SinPermiso.jsx';
 
 const ESPECTADOR = ['ESPECTADOR'];
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/funcion/:id" element={<SeleccionButacas />} />
           <Route path="/reserva/:id/pago" element={<Pago />} />
           <Route path="/reserva/:id/confirmacion" element={<Confirmacion />} />
+          <Route path="/mis-entradas" element={<MisEntradas />} />
         </Route>
 
         {/* Encargado de sala */}
