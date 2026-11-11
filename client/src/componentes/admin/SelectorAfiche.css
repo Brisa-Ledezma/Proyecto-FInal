@@ -1,0 +1,23 @@
+.selector-afiche { display: flex; flex-direction: column; gap: 8px; }
+.selector-afiche__zona {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 2 / 3;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  border: 2px dashed var(--linea-fuerte);
+  border-radius: var(--r-medio);
+  background: var(--fondo);
+  cursor: pointer;
+  transition: border-color var(--transicion), box-shadow var(--transicion);
+}
+.selector-afiche__zona:hover, .selector-afiche__zona--arrastrando { border-color: var(--oro); box-shadow: var(--brillo-oro); }
+.selector-afiche__zona--error { border-color: var(--senal-borde); }
+.selector-afiche__zona img { width: 100%; height: 100%; object-fit: cover; }
+.selector-afiche__vacio { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: var(--e-4); text-align: center; font-size: var(--t-chico); }
+.selector-afiche__vacio svg { font-size: 44px; color: var(--oro-texto); }
+.selector-afiche__acciones { display: flex; gap: 8px; flex-wrap: wrap; }
+input:focus-visible + .selector-afiche__acciones, .selector-afiche:focus-within .selector-afiche__zona { border-color: var(--oro); }

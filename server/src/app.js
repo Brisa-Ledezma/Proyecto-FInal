@@ -1,8 +1,8 @@
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import express from 'express';
 import helmet from 'helmet';
 import { config } from './config.js';
+import { carpetaCliente, carpetaUploads } from './rutas.js';
 import { manejadorErrores, rutaNoEncontrada } from './middlewares/errores.js';
 import { cargarUsuario, middlewareSesion } from './middlewares/sesion.js';
 import { rutasAuth } from './modulos/usuarios/auth.rutas.js';
@@ -10,10 +10,8 @@ import { rutasCartelera } from './modulos/cartelera/cartelera.rutas.js';
 import { rutasReservas } from './modulos/reservas/reservas.rutas.js';
 import { rutasPagos } from './modulos/pagos/pagos.rutas.js';
 import { rutasControl } from './modulos/entradas/control.rutas.js';
+import { rutasAdmin } from './modulos/administracion/admin.rutas.js';
 
-const raiz = path.dirname(fileURLToPath(import.meta.url));
-export const carpetaUploads = path.resolve(raiz, '../uploads');
-const carpetaCliente = path.resolve(raiz, '../../client/dist');
 
 export function crearApp() {
   const app = express();
@@ -41,6 +39,7 @@ export function crearApp() {
   app.use('/api', rutasReservas);
   app.use('/api', rutasPagos);
   app.use('/api', rutasControl);
+  app.use('/api/admin', rutasAdmin);
 
   app.use('/api', rutaNoEncontrada);
 
