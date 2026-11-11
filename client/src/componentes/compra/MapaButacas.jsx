@@ -12,16 +12,16 @@ export const ESTADOS_BUTACA = {
   inhabilitada: { texto: 'Inhabilitada', Icono: Minus },
 };
 
-export function Butaca({ estado, etiqueta, alTocar, tamano }) {
+export function Butaca({ estado, etiqueta, alTocar, tamano, editable = false }) {
   const { Icono } = ESTADOS_BUTACA[estado];
-  const elegible = estado === 'libre' || estado === 'seleccionada';
+  const elegible = editable || estado === 'libre' || estado === 'seleccionada';
   return (
     <button
       type="button"
       className={`butaca butaca--${estado}`}
       style={tamano ? { '--t': `${tamano}px` } : undefined}
       aria-label={`${etiqueta}, ${ESTADOS_BUTACA[estado].texto.toLowerCase()}`}
-      aria-pressed={estado === 'seleccionada'}
+      aria-pressed={editable ? estado === 'inhabilitada' : estado === 'seleccionada'}
       aria-disabled={!elegible}
       data-etiqueta={etiqueta.replace('Fila ', '').replace(', butaca ', '')}
       onClick={elegible ? alTocar : undefined}
@@ -52,7 +52,7 @@ export function LeyendaButacas({ estados = ['libre', 'seleccionada', 'bloqueada'
  * la identificación aparece al pasar el mouse o con el foco, y en el resumen.
  * `estadoDe(butaca)` devuelve el estado visible de cada butaca.
  */
-export default function MapaButacas({ filas, estadoDe, alTocar, leyenda = true }) {
+export default function MapaButacas({ filas, estadoDe, alTocar, leyenda = true, editable = false, estadosLeyenda }) {
   const contenedor = useRef(null);
   const [anchoDisponible, setAnchoDisponible] = useState(0);
   const [zoom, setZoom] = useState(1);
@@ -97,6 +97,7 @@ export default function MapaButacas({ filas, estadoDe, alTocar, leyenda = true }
                         estado={estadoDe(b)}
                         etiqueta={`Fila ${fila.letra}, butaca ${b.numero}`}
                         alTocar={alTocar ? () => alTocar(b, fila) : undefined}
+                        editable={editable}
                       />
                     </span>
                   ))}
@@ -107,7 +108,7 @@ export default function MapaButacas({ filas, estadoDe, alTocar, leyenda = true }
           </div>
         </div>
       </div>
-      {leyenda && <LeyendaButacas />}
+      {leyenda && <LeyendaButacas estados={estadosLeyenda} />}
     </div>
   );
 }

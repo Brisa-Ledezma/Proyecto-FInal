@@ -13,6 +13,7 @@ import Confirmacion from './paginas/espectador/Confirmacion.jsx';
 import MisEntradas from './paginas/espectador/MisEntradas.jsx';
 import ControlIngreso from './paginas/encargado/ControlIngreso.jsx';
 import Peliculas from './paginas/admin/Peliculas.jsx';
+import Salas from './paginas/admin/Salas.jsx';
 import { NoEncontrada } from './paginas/SinPermiso.jsx';
 
 const ESPECTADOR = ['ESPECTADOR'];
@@ -47,6 +48,7 @@ export default function App() {
         {/* Administración */}
         <Route element={<RutaProtegida roles={ADMIN} />}>
           <Route path="/admin/peliculas" element={<Peliculas />} />
+          <Route path="/admin/salas" element={<Salas />} />
         </Route>
 
         <Route path="*" element={<NoEncontrada />} />
