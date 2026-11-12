@@ -1,0 +1,220 @@
+.carrusel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-5);
+  width: 100%;
+  max-width: 1080px;
+  margin-inline: auto;
+}
+
+/* Todas las diapositivas en la misma celda: el alto lo da la más alta */
+.carrusel__escenario { display: grid; }
+.carrusel__diapositiva {
+  grid-area: 1 / 1;
+  position: relative;
+  display: grid;
+  grid-template-columns: clamp(170px, 22vw, 280px) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: center;
+  padding: 8px 64px;
+  opacity: 0;
+  transform: translateX(28px) scale(0.98);
+  transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+  pointer-events: none;
+}
+.carrusel__diapositiva--activa { opacity: 1; transform: none; pointer-events: auto; }
+
+.carrusel__fondo {
+  position: absolute;
+  inset: -40px 0;
+  z-index: -1;
+  background-size: cover;
+  background-position: center 25%;
+  filter: blur(36px) saturate(1.3);
+  opacity: 0.35;
+  mask-image: radial-gradient(ellipse 60% 60% at 30% 50%, #000, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 30% 50%, #000, transparent 75%);
+}
+
+/* Afiche con halo dorado y un reflejo que lo cruza */
+.carrusel__afiche {
+  position: relative;
+  display: block;
+  border-radius: var(--r-chico);
+  box-shadow: 0 0 0 1px rgba(241, 213, 146, 0.45), 0 30px 60px -20px rgba(0, 0, 0, 0.9), 0 0 60px -10px rgba(214, 168, 78, 0.45);
+  transform: perspective(900px) rotateY(6deg);
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.6s ease;
+  overflow: hidden;
+}
+.carrusel__afiche:hover { transform: perspective(900px) rotateY(0deg) translateY(-4px); box-shadow: 0 0 0 1px rgba(241, 213, 146, 0.8), 0 30px 60px -20px rgba(0, 0, 0, 0.9), 0 0 80px -6px rgba(241, 213, 146, 0.6); }
+.carrusel__afiche .afiche { border-radius: 0; box-shadow: none; }
+.carrusel__reflejo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 246, 220, 0.35) 45%, transparent 60%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+.carrusel__diapositiva--activa .carrusel__reflejo { animation: cruzar-reflejo 1.6s ease 0.5s both; }
+@keyframes cruzar-reflejo { to { transform: translateX(120%); } }
+
+.carrusel__info { display: flex; flex-direction: column; gap: 12px; min-width: 0; text-align: left; }
+.carrusel__diapositiva--activa .carrusel__info > * { animation: aparecer 0.6s ease both; }
+.carrusel__diapositiva--activa .carrusel__info > :nth-child(2) { animation-delay: 0.08s; }
+.carrusel__diapositiva--activa .carrusel__info > :nth-child(3) { animation-delay: 0.14s; }
+.carrusel__diapositiva--activa .carrusel__info > :nth-child(4) { animation-delay: 0.2s; }
+.carrusel__diapositiva--activa .carrusel__info > :nth-child(5) { animation-delay: 0.26s; }
+.carrusel__diapositiva--activa .carrusel__info > :nth-child(6) { animation-delay: 0.32s; }
+
+.carrusel__rotulo { display: flex; align-items: center; gap: 12px; font-family: var(--f-rotulo); font-size: 0.8125rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--oro-claro); }
+.carrusel__rotulo::before { content: ''; width: 28px; height: 2px; background: var(--oro-metal); box-shadow: 0 0 8px rgba(241, 213, 146, 0.8); }
+.carrusel__rotulo .cifra { color: #cdbba6; letter-spacing: 0.1em; }
+.carrusel__titulo {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 1.2rem + 2.6vw, 3.4rem);
+  line-height: 1.05;
+  background: var(--oro-metal);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: reflejo 6s ease-in-out infinite;
+  text-shadow: none;
+}
+.carrusel__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; color: #e2d3c0; }
+.carrusel__meta .clasificacion { color: var(--oro-claro); border-color: var(--oro); }
+.carrusel__duracion { display: inline-flex; align-items: center; gap: 5px; }
+.carrusel__sinopsis {
+  max-width: 58ch;
+  color: #e9dccb;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.carrusel__funciones { display: flex; flex-direction: column; gap: 8px; }
+.carrusel__funciones .rotulo { color: #cdbba6; }
+.carrusel__funciones ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.carrusel__funcion {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: var(--r-pildora);
+  border: 1px solid rgba(241, 213, 146, 0.35);
+  background: rgba(20, 10, 13, 0.55);
+  backdrop-filter: blur(6px);
+  color: #f4ebdd;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: border-color var(--transicion), box-shadow var(--transicion), transform var(--transicion), background-color var(--transicion);
+}
+.carrusel__funcion strong { font-size: 1.0625rem; font-weight: 500; color: var(--oro-claro); }
+.carrusel__funcion span:last-child { color: #cdbba6; }
+a.carrusel__funcion:hover { border-color: var(--oro-claro); background: rgba(92, 18, 36, 0.7); box-shadow: 0 0 18px -4px rgba(241, 213, 146, 0.6); transform: translateY(-2px); }
+.carrusel__funcion--agotada { opacity: 0.6; }
+.carrusel__funcion--agotada strong { text-decoration: line-through; color: #cdbba6; }
+
+.carrusel__acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 6px; }
+.carrusel__total { font-size: var(--t-chico); color: #cdbba6; }
+
+/* Flechas */
+.carrusel__flecha {
+  position: absolute;
+  top: calc(50% - 56px);
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(241, 213, 146, 0.5);
+  background: rgba(20, 10, 13, 0.6);
+  backdrop-filter: blur(6px);
+  color: var(--oro-claro);
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform var(--transicion), box-shadow var(--transicion), background-color var(--transicion);
+}
+.carrusel__flecha:hover { transform: scale(1.08); box-shadow: 0 0 22px -2px rgba(241, 213, 146, 0.65); background: rgba(92, 18, 36, 0.8); }
+.carrusel__flecha--izq { left: 0; }
+.carrusel__flecha--der { right: 0; }
+
+/* Miniaturas con barra de progreso */
+.carrusel__control { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.carrusel__pausa {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(241, 213, 146, 0.4);
+  background: rgba(20, 10, 13, 0.5);
+  color: var(--oro-claro);
+  cursor: pointer;
+}
+.carrusel__miniaturas { display: flex; gap: 10px; overflow-x: auto; padding: 6px 4px 10px; scrollbar-width: none; }
+.carrusel__miniatura {
+  position: relative;
+  flex: none;
+  width: 46px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+  opacity: 0.5;
+  filter: saturate(0.6);
+  transition: opacity var(--transicion), transform var(--transicion), filter var(--transicion), box-shadow var(--transicion);
+}
+.carrusel__miniatura .afiche { width: 46px; border-radius: 6px; box-shadow: none; }
+.carrusel__miniatura:hover { opacity: 0.85; transform: translateY(-2px); }
+.carrusel__miniatura[aria-selected='true'] { opacity: 1; filter: none; transform: translateY(-4px) scale(1.08); box-shadow: 0 0 0 2px var(--oro-claro), 0 0 18px rgba(241, 213, 146, 0.6); }
+.carrusel__progreso {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  bottom: -7px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--oro-metal);
+  transform-origin: left;
+  animation: progreso linear both;
+}
+.carrusel--detenido .carrusel__progreso { animation-play-state: paused; }
+@keyframes progreso { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* Celular: afiche, título, datos y "Ver funciones". Sin sinopsis ni horarios. */
+@media (max-width: 760px) {
+  .carrusel { gap: var(--e-4); }
+  .carrusel__diapositiva { grid-template-columns: 1fr; padding: 0 40px; gap: 16px; justify-items: center; transform: translateX(16px); }
+  .carrusel__diapositiva--activa { transform: none; }
+  .carrusel__afiche { width: min(44vw, 170px); transform: none; }
+  .carrusel__afiche:hover { transform: none; }
+  .carrusel__info { text-align: center; align-items: center; gap: 10px; }
+  .carrusel__rotulo { font-size: 0.75rem; letter-spacing: 0.2em; }
+  .carrusel__rotulo::before { display: none; }
+  .carrusel__titulo { font-size: clamp(1.5rem, 6.5vw, 2rem); }
+  .carrusel__meta { justify-content: center; font-size: 0.9375rem; }
+  .carrusel__sinopsis, .carrusel__funciones, .carrusel__total { display: none; }
+  .carrusel__acciones { justify-content: center; margin-top: 2px; }
+  .carrusel__flecha { top: calc(min(44vw, 170px) * 0.75 - 21px); width: 40px; height: 40px; font-size: 18px; }
+  .carrusel__flecha--izq { left: 0; }
+  .carrusel__flecha--der { right: 0; }
+
+  /* Las miniaturas pasan a ser puntos */
+  .carrusel__control { gap: 10px; }
+  .carrusel__pausa { width: 30px; height: 30px; font-size: 13px; }
+  .carrusel__miniaturas { gap: 6px; padding: 4px; align-items: center; }
+  .carrusel__miniatura { width: 8px; height: 8px; border-radius: 999px; background: rgba(241, 213, 146, 0.45); opacity: 1; filter: none; overflow: hidden; transition: width 0.3s ease, background-color 0.3s ease; }
+  .carrusel__miniatura .afiche { display: none; }
+  .carrusel__miniatura:hover { transform: none; }
+  .carrusel__miniatura[aria-selected='true'] { width: 26px; transform: none; background: rgba(241, 213, 146, 0.3); box-shadow: 0 0 10px rgba(241, 213, 146, 0.5); }
+  .carrusel__progreso { inset: 0; height: auto; border-radius: 999px; }
+}

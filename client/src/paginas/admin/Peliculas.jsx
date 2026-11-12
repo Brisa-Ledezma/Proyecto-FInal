@@ -187,12 +187,12 @@ export default function Peliculas() {
   };
 
   const columnas = [
-    { clave: 'afiche', titulo: 'Afiche', clase: 'sin-etiqueta col-afiche', render: (p) => <Afiche pelicula={p} tamano="chico" /> },
-    { clave: 'titulo', titulo: 'Película', render: (p) => (<div className="celda-titulo"><strong>{p.titulo}</strong><span className="texto-2">{p.genero}</span></div>) },
+    { clave: 'afiche', titulo: 'Afiche', clase: 'sin-etiqueta col-afiche', movil: 'oculta', render: (p) => <Afiche pelicula={p} tamano="chico" /> },
+    { clave: 'titulo', titulo: 'Película', movil: 'principal', render: (p) => (<div className="celda-titulo"><strong>{p.titulo}</strong><span className="texto-2">{p.genero}</span></div>) },
     { clave: 'clasificacion', titulo: 'Clasif.', render: (p) => <Clasificacion valor={p.clasificacion} /> },
     { clave: 'duracion', titulo: 'Duración', render: (p) => <span className="cifra">{duracion(p.duracionMin)}</span> },
-    { clave: 'funciones', titulo: 'Funciones próximas', alinear: 'center', render: (p) => <span className="cifra">{p.funcionesProximas}</span> },
-    { clave: 'estado', titulo: 'Estado', render: (p) => <Estado estado={p.activa ? 'ACTIVA' : 'INACTIVA'} /> },
+    { clave: 'funciones', titulo: 'Próximas', alinear: 'center', render: (p) => <span className="cifra">{p.funcionesProximas}</span> },
+    { clave: 'estado', titulo: 'Estado', movil: 'esquina', render: (p) => <Estado estado={p.activa ? 'ACTIVA' : 'INACTIVA'} /> },
     {
       clave: 'acciones', titulo: 'Acciones', clase: 'ancho-completo sin-etiqueta', alinear: 'right',
       render: (p) => (

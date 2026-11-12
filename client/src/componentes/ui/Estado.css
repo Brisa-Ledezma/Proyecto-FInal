@@ -1,18 +1,38 @@
+/* Estado como píldora suave: punto de color + texto (nunca solo color, RNF-08) */
 .estado {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  border: 1px solid;
-  font-family: var(--f-rotulo);
+  gap: 7px;
+  padding: 4px 12px 4px 10px;
+  border-radius: var(--r-pildora);
+  border: 1px solid transparent;
   font-size: 0.8125rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: 600;
+  line-height: 1.3;
   white-space: nowrap;
 }
-.estado--ok { color: var(--petroleo-texto); background: var(--petroleo-fondo); border-color: var(--petroleo-claro); }
-.estado--pendiente { color: var(--aviso); background: var(--aviso-fondo); border-color: var(--oro); }
-.estado--oro { color: var(--oro-texto); background: transparent; border-color: var(--oro-hondo); }
-.estado--error { color: var(--senal); background: var(--senal-fondo); border-color: var(--senal-borde); }
-.estado--neutro { color: var(--texto-2); background: var(--superficie-2); border-color: var(--linea-fuerte); }
+.estado > svg { font-size: 0.95rem; }
+.estado__punto {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.estado--vivo .estado__punto::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  opacity: 0;
+  animation: latido 2.2s ease-out infinite;
+}
+@keyframes latido { 0% { transform: scale(0.5); opacity: 0.7; } 100% { transform: scale(1.5); opacity: 0; } }
+
+.estado--ok { color: var(--petroleo-texto); background: color-mix(in srgb, var(--petroleo) 16%, transparent); border-color: color-mix(in srgb, var(--petroleo-claro) 30%, transparent); }
+.estado--pendiente { color: var(--aviso); background: var(--aviso-fondo); border-color: color-mix(in srgb, var(--oro) 35%, transparent); }
+.estado--oro { color: var(--oro-texto); background: color-mix(in srgb, var(--oro) 12%, transparent); border-color: color-mix(in srgb, var(--oro) 30%, transparent); }
+.estado--error { color: var(--senal); background: var(--senal-fondo); border-color: color-mix(in srgb, var(--senal-borde) 35%, transparent); }
+.estado--neutro { color: var(--texto-2); background: var(--superficie-2); border-color: var(--linea); }

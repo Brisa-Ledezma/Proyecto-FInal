@@ -1,57 +1,175 @@
-.telon-escena {
+/*
+ * Telón de tela.
+ * Cada paño ocupa la mitad del escenario. Cerrado es un rectángulo con pliegues
+ * verticales; al abrirse, el recorte (clip-path) lo lleva contra la pared y lo
+ * "cintura" a la altura del cordón, mientras los pliegues se aprietan y pasan a
+ * converger en el punto donde está atado. El paño derecho es el izquierdo espejado.
+ */
+.telon {
+  --apertura: 2s;
+  --demora: 0.35s;
+  --curva: cubic-bezier(0.65, 0, 0.25, 1);
   position: relative;
-  overflow: hidden;
-  background: radial-gradient(ellipse 70% 100% at 50% 110%, #3a2414 0%, #140b0d 60%, #0c0709 100%);
-  color: #f4ebdd;
   isolation: isolate;
+  overflow: hidden;
+  color: #f4ebdd;
+  min-height: clamp(560px, calc(100dvh - var(--alto-barra) - 24px), 860px);
+  display: flex;
+  /* Frente del escenario: borde curvo con moldura dorada y sombra sobre la página */
+  --curva-proscenio: clamp(22px, 4vw, 56px);
+  border-bottom: 2px solid var(--oro);
+  border-radius: 0 0 50% 50% / 0 0 var(--curva-proscenio) var(--curva-proscenio);
+  box-shadow:
+    0 2px 0 rgba(251, 231, 168, 0.35),
+    0 6px 18px -6px rgba(214, 168, 78, 0.55),
+    0 26px 40px -24px rgba(0, 0, 0, 0.55);
 }
-.telon-escena__bambalina {
-  position: relative;
-  z-index: 3;
-  height: 30px;
-  background: linear-gradient(180deg, var(--telon-hondo), var(--telon));
-  border-bottom: 3px solid var(--oro);
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
-}
-.telon-escena__festones {
-  position: relative;
-  z-index: 3;
-  height: 16px;
-  margin-top: -1px;
-  background: radial-gradient(circle at 20px 0, var(--telon) 19px, transparent 20px) 0 0 / 40px 16px repeat-x;
-}
-.telon-escena__pano {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  z-index: 2;
-  width: clamp(36px, 12vw, 170px);
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.35)),
-    repeating-linear-gradient(90deg, var(--telon-hondo) 0 5px, var(--telon) 5px 16px, var(--telon-luz) 16px 20px, var(--telon) 20px 30px);
-  animation: abrir-telon 1.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-.telon-escena__pano--izq { left: 0; transform-origin: left center; }
-.telon-escena__pano--der {
-  right: 0;
-  transform-origin: right center;
-  background:
-    linear-gradient(270deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.35)),
-    repeating-linear-gradient(270deg, var(--telon-hondo) 0 5px, var(--telon) 5px 16px, var(--telon-luz) 16px 20px, var(--telon) 20px 30px);
-}
-@keyframes abrir-telon { from { transform: scaleX(1.6); } to { transform: scaleX(1); } }
+.telon--compacto { min-height: 0; }
 
-/* Haz del proyector */
-.telon-escena__luz {
+.telon__fondo {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: conic-gradient(from 180deg at 50% -10%, transparent 160deg, rgba(251, 231, 168, 0.1) 175deg, rgba(251, 231, 168, 0.16) 180deg, rgba(251, 231, 168, 0.1) 185deg, transparent 200deg);
-  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 60% at 50% 18%, rgba(214, 168, 78, 0.16), transparent 70%),
+    radial-gradient(ellipse 90% 70% at 50% 110%, #3a2414 0%, transparent 60%),
+    linear-gradient(180deg, #170a0e 0%, #120a0c 60%, #1a0f10 100%);
 }
-.telon-escena__contenido {
+/* Haz del proyector */
+.telon__haz {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: conic-gradient(from 180deg at 50% -8%, transparent 158deg, rgba(251, 231, 168, 0.08) 172deg, rgba(251, 231, 168, 0.15) 180deg, rgba(251, 231, 168, 0.08) 188deg, transparent 202deg);
+  pointer-events: none;
+  animation: fundido 1.2s ease calc(var(--demora) + 0.6s) both;
+}
+
+.telon__contenido {
   position: relative;
   z-index: 1;
-  padding: var(--e-6) clamp(48px, 14vw, 190px) var(--e-7);
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 92px clamp(56px, 15vw, 230px) clamp(96px, 12vh, 140px);
+  animation: revelar 1.4s ease calc(var(--demora) + 0.5s) both;
 }
-.telon-escena--compacto .telon-escena__contenido { padding-block: var(--e-5) var(--e-6); }
+.telon--compacto .telon__contenido { padding-block: 96px 88px; }
+@keyframes revelar { from { opacity: 0; transform: scale(0.97); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+
+/* ---------- Paños ---------- */
+.telon__pano {
+  --nudo-x: 9%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  width: 50.5%;
+  pointer-events: none;
+  filter: drop-shadow(12px 0 16px rgba(0, 0, 0, 0.6));
+}
+.telon__pano--der { left: auto; right: 0; transform: scaleX(-1); }
+
+.telon__tela {
+  --pliegue: 92px;
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 214, 160, 0.12) 0%, transparent 30%, transparent 70%, rgba(0, 0, 0, 0.35) 100%),
+    linear-gradient(90deg, #2a0710 0%, #561022 16%, #84203a 34%, #b22e48 47%, #84203a 60%, #561022 80%, #2a0710 100%) 0 0 / var(--pliegue) 100% repeat-x;
+  background-size: 100% 100%, var(--pliegue) 100%;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 10%, 100% 22%, 100% 34%, 100% 46%, 100% 55%, 100% 61%, 100% 70%, 100% 84%, 100% 100%, 0% 100%);
+  animation:
+    abrir-tela var(--apertura) var(--curva) var(--demora) both,
+    apretar-pliegues var(--apertura) var(--curva) var(--demora) both,
+    mecer 7s ease-in-out calc(var(--demora) + var(--apertura)) infinite;
+  transform-origin: 0 0;
+}
+/* Pliegues que convergen hacia el cordón (aparecen al recogerse) */
+.telon__recogida {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 22% 7% at var(--nudo-x) 61%, rgba(0, 0, 0, 0.6), transparent 70%),
+    linear-gradient(180deg, rgba(255, 214, 160, 0.14) 0%, transparent 28%, transparent 72%, rgba(0, 0, 0, 0.4) 100%),
+    repeating-conic-gradient(from 0deg at var(--nudo-x) 61%, #2a0710 0deg, #5c1224 1.2deg, #9a2640 2.1deg, #c0394f 2.5deg, #9a2640 2.9deg, #5c1224 3.8deg, #2a0710 4.6deg);
+  opacity: 0;
+  animation: fundido calc(var(--apertura) * 0.55) ease calc(var(--demora) + var(--apertura) * 0.45) both;
+}
+
+@keyframes abrir-tela {
+  to {
+    clip-path: polygon(0% 0%, 40% 0%, 37% 10%, 32% 22%, 25% 34%, 17% 46%, 11% 55%, 9% 61%, 12% 70%, 17% 84%, 22% 100%, 0% 100%);
+  }
+}
+@keyframes apretar-pliegues { to { background-size: 100% 100%, 24px 100%; } }
+@keyframes mecer { 0%, 100% { transform: skewX(0deg); } 50% { transform: skewX(0.35deg); } }
+
+/* Cordón con borla, aparece cuando la tela ya está recogida */
+.telon__cordon {
+  position: absolute;
+  left: 0;
+  top: 61%;
+  translate: 0 -27%;
+  width: clamp(78px, 13%, 130px);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.55));
+  transform-origin: 70% 30%;
+  animation: atar 0.7s cubic-bezier(0.2, 0.8, 0.2, 1.2) calc(var(--demora) + var(--apertura) - 0.25s) both;
+}
+.telon__flecos { transform-origin: 86px 88px; animation: balanceo 4.5s ease-in-out calc(var(--demora) + var(--apertura) + 0.4s) infinite; }
+@keyframes atar { from { opacity: 0; transform: translateY(-14px) scale(0.85); } to { opacity: 1; transform: none; } }
+@keyframes balanceo { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(3deg); } }
+
+/* ---------- Bambalina: guirnaldas de tela con ribete dorado ---------- */
+.telon__bambalina {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  height: 78px;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, var(--telon-hondo), #4a0f1d) 0 0 / 100% 22px no-repeat,
+    radial-gradient(ellipse 50% 100% at 50% 0, transparent 80%, #9c7428 81%, #fbe7a8 84%, #d6a84e 87%, #7a5a1c 90%, transparent 91%) center 0 / 200px 70px repeat-x,
+    radial-gradient(ellipse 50% 100% at 50% 0, #9a2640 0%, #74182f 38%, #4f0f1f 70%, #3a0b17 80%, transparent 81%) center 0 / 200px 70px repeat-x;
+  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.55));
+}
+.telon--compacto .telon__bambalina { height: 64px; background-size: 100% 18px, 160px 56px, 160px 56px; }
+
+/* Proscenio: el escenario se funde con la página, sin cortes de color */
+.telon__proscenio {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  /* Candilejas: un resplandor cálido y tenue que sube desde el borde del escenario.
+     Sin fundido hacia el color de la página, así no aparecen bandas. */
+  height: 90px;
+  pointer-events: none;
+  background: radial-gradient(ellipse 60% 100% at 50% 100%, rgba(241, 213, 146, 0.1), transparent 70%);
+}
+
+/* Celular: sin telón ni guirnaldas, solo el escenario con su contenido */
+@media (max-width: 760px) {
+  .telon { min-height: 0; --curva-proscenio: 20px; }
+  .telon__pano, .telon__bambalina { display: none; }
+  .telon__contenido { padding: 28px 18px 40px; animation-delay: 0s; animation-duration: 0.6s; }
+  .telon__haz { animation-delay: 0s; }
+}
+@keyframes abrir-tela-movil {
+  to {
+    clip-path: polygon(0% 0%, 24% 0%, 21% 10%, 17% 22%, 13% 34%, 10% 46%, 8.5% 55%, 8% 61%, 9% 70%, 11% 84%, 14% 100%, 0% 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .telon__tela { clip-path: polygon(0% 0%, 40% 0%, 37% 10%, 32% 22%, 25% 34%, 17% 46%, 11% 55%, 9% 61%, 12% 70%, 17% 84%, 22% 100%, 0% 100%); }
+  .telon__recogida, .telon__cordon { opacity: 1; }
+}

@@ -1,0 +1,189 @@
+/* ---------- Calendario mensual ---------- */
+.calendario { width: 280px; display: flex; flex-direction: column; gap: 8px; }
+.calendario__cabecera { display: flex; align-items: center; justify-content: space-between; }
+.calendario__mes { font-family: var(--f-display); font-weight: 600; font-size: 1.0625rem; text-transform: capitalize; color: var(--oro-texto); }
+.calendario__mes-btn {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--linea);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--oro-texto);
+  cursor: pointer;
+}
+.calendario__mes-btn:hover { border-color: var(--oro); }
+.calendario__semana, .calendario__grilla { display: grid; grid-template-columns: repeat(7, 1fr); }
+.calendario__semana span { text-align: center; font-family: var(--f-rotulo); font-size: 0.75rem; letter-spacing: 0.1em; color: var(--texto-2); padding-bottom: 2px; }
+.calendario__grilla { row-gap: 2px; }
+.calendario__dia {
+  position: relative;
+  height: 38px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--texto);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: background-color var(--transicion), color var(--transicion);
+}
+.calendario__dia:hover:not(:disabled) { background: var(--superficie-2); }
+.calendario__dia:disabled { color: var(--texto-2); opacity: 0.4; cursor: not-allowed; }
+.calendario__dia--hoy { box-shadow: inset 0 0 0 1.5px var(--oro); font-weight: 700; color: var(--oro-texto); }
+.calendario__dia--en-rango { background: color-mix(in srgb, var(--oro) 16%, transparent); border-radius: 0; }
+.calendario__dia--desde { border-radius: 10px 0 0 10px; }
+.calendario__dia--hasta { border-radius: 0 10px 10px 0; }
+.calendario__dia--desde.calendario__dia--hasta { border-radius: 10px; }
+.calendario__dia--elegido {
+  background: var(--telon) !important;
+  color: #fff6dc;
+  font-weight: 700;
+  box-shadow: var(--brillo-oro);
+}
+.calendario__punto {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background: var(--oro);
+}
+.calendario__dia--elegido .calendario__punto { background: var(--oro-claro); }
+.calendario__ayuda { font-size: 0.8125rem; color: var(--texto-2); text-align: center; }
+
+/* ---------- Ventanita desplegable ---------- */
+.desplegable {
+  position: absolute;
+  top: calc(100% + 10px);
+  z-index: 30;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, var(--oro) 45%, var(--linea));
+  border-radius: var(--r-grande);
+  background: var(--superficie);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.6), 0 0 0 6px color-mix(in srgb, var(--oro) 6%, transparent);
+  animation: abrir-desplegable 0.22s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transform-origin: top center;
+}
+.desplegable--inicio { left: 0; }
+.desplegable--centro { left: 50%; translate: -50% 0; }
+@keyframes abrir-desplegable { from { opacity: 0; transform: translateY(-6px) scale(0.97); } to { opacity: 1; transform: none; } }
+.desplegable__atajos { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+.desplegable__atajos button,
+.desplegable__lista button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--linea);
+  border-radius: var(--r-pildora);
+  background: var(--superficie-2);
+  color: var(--texto);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.desplegable__atajos button:hover,
+.desplegable__lista button:hover { border-color: var(--oro); }
+.desplegable__rango { display: flex; gap: 14px; }
+.desplegable__lista { list-style: none; display: flex; flex-direction: column; gap: 6px; padding-right: 14px; border-right: 1px solid var(--linea); }
+.desplegable__lista button { width: 100%; text-align: left; border-radius: 10px; }
+.desplegable__lista button[aria-pressed='true'] { background: var(--telon); color: #fff6dc; border-color: var(--oro); }
+
+/* ---------- Selector de día ---------- */
+.selector-dia { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.selector-dia__centro { position: relative; }
+.selector-dia__flecha {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--linea);
+  border-radius: 50%;
+  background: var(--superficie);
+  color: var(--oro-texto);
+  cursor: pointer;
+  transition: border-color var(--transicion), box-shadow var(--transicion), transform var(--transicion);
+}
+.selector-dia__flecha:hover { border-color: var(--oro); box-shadow: var(--brillo-oro); }
+.selector-dia__flecha:active { transform: scale(0.94); }
+.selector-dia__boton {
+  min-width: 250px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 20px 6px 16px;
+  border: 1px solid color-mix(in srgb, var(--oro) 50%, var(--linea));
+  border-radius: var(--r-pildora);
+  background: linear-gradient(180deg, var(--superficie), var(--superficie-2));
+  color: var(--texto);
+  cursor: pointer;
+  text-align: left;
+  transition: box-shadow var(--transicion), border-color var(--transicion);
+}
+.selector-dia__boton:hover, .selector-dia__boton[aria-expanded='true'] { border-color: var(--oro); box-shadow: var(--brillo-oro); }
+.selector-dia__boton > svg { font-size: 26px; color: var(--oro-texto); flex: none; }
+.selector-dia__texto { display: flex; flex-direction: column; line-height: 1.2; }
+.selector-dia__texto strong { font-family: var(--f-display); font-size: 1.125rem; font-weight: 600; animation: fundido 0.3s ease both; }
+.selector-dia__texto span { font-size: 0.875rem; color: var(--texto-2); }
+.selector-dia__hoy {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--r-pildora);
+  background: transparent;
+  color: var(--oro-texto);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- Selector de período ---------- */
+.selector-rango { position: relative; }
+.selector-rango__boton {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 14px 4px 12px;
+  border: 1px solid color-mix(in srgb, var(--oro) 45%, var(--linea));
+  border-radius: var(--r-pildora);
+  background: var(--superficie);
+  color: var(--texto);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color var(--transicion), box-shadow var(--transicion);
+}
+.selector-rango__boton:hover, .selector-rango__boton[aria-expanded='true'] { border-color: var(--oro); box-shadow: var(--brillo-oro); }
+.selector-rango__boton > svg:first-child { font-size: 22px; color: var(--oro-texto); }
+.selector-rango__texto { display: flex; flex-direction: column; line-height: 1.15; }
+.selector-rango__texto span { font-size: 0.75rem; color: var(--texto-2); }
+.selector-rango__texto strong { font-size: 1rem; font-weight: 500; }
+.selector-rango__caret { color: var(--texto-2); transform: rotate(90deg); transition: transform var(--transicion); }
+.selector-rango__boton[aria-expanded='true'] .selector-rango__caret { transform: rotate(-90deg); }
+
+@media (max-width: 600px) {
+  .selector-dia__boton { min-width: 0; flex: 1; }
+  .selector-dia__centro { flex: 1; }
+  .desplegable { left: 50% !important; translate: -50% 0; max-width: calc(100vw - 24px); }
+  .desplegable__rango { flex-direction: column; }
+  .desplegable__lista { flex-direction: row; flex-wrap: wrap; border-right: 0; padding-right: 0; border-bottom: 1px solid var(--linea); padding-bottom: 10px; }
+  .desplegable__lista button { width: auto; }
+}
+
+@media (max-width: 760px) {
+  .selector-dia { gap: 6px; }
+  .selector-dia__flecha { width: 40px; height: 40px; flex: none; }
+  .selector-dia__boton { min-height: 48px; padding: 4px 14px 4px 12px; gap: 10px; }
+  .selector-dia__boton > svg { font-size: 22px; }
+  .selector-dia__texto strong { font-size: 1rem; }
+  .selector-dia__texto span { font-size: 0.8125rem; }
+  .selector-rango, .selector-rango__boton { width: 100%; }
+  .calendario { width: min(280px, calc(100vw - 56px)); }
+}

@@ -22,7 +22,7 @@
 .boton:active:not(:disabled) { transform: translateY(1px) scale(0.99); }
 .boton:disabled { cursor: not-allowed; }
 .boton--ancho { width: 100%; }
-.boton--chico { min-height: 38px; padding: 6px 14px; font-size: 0.875rem; }
+.boton--chico { min-height: 36px; padding: 5px 14px; font-size: 0.875rem; gap: 7px; }
 .boton__icono { display: inline-flex; font-size: 1.15em; }
 
 /* Ticket: muescas a los costados, troquel y brillo metálico que recorre el botón */
@@ -74,13 +74,38 @@
   to { transform: skewX(-18deg) translateX(520%); }
 }
 
+/* Secundario y peligro: píldoras suaves, texto normal (no todo en mayúsculas) */
+.boton--secundario,
+.boton--peligro,
+.boton--exito {
+  border-radius: var(--r-pildora);
+  font-family: var(--f-texto);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+  text-transform: none;
+  padding-inline: 18px;
+}
 .boton--secundario {
-  background: transparent;
-  border-color: var(--linea-fuerte);
+  background: color-mix(in srgb, var(--superficie-2) 70%, transparent);
+  border-color: var(--linea);
   color: var(--texto);
 }
-.boton--secundario:hover:not(:disabled) { border-color: var(--oro); color: var(--oro-texto); }
+.boton--secundario .boton__icono { color: var(--oro-texto); }
+.boton--secundario:hover:not(:disabled) {
+  border-color: var(--oro);
+  background: color-mix(in srgb, var(--oro) 12%, var(--superficie));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--oro) 14%, transparent), 0 6px 18px -8px rgba(214, 168, 78, 0.6);
+  transform: translateY(-1px);
+}
 .boton--secundario:disabled { opacity: 0.55; }
+
+.boton--exito {
+  background: var(--petroleo-fondo);
+  border-color: color-mix(in srgb, var(--petroleo-claro) 55%, transparent);
+  color: var(--petroleo-texto);
+}
+.boton--exito:hover:not(:disabled) { box-shadow: var(--brillo-petroleo); transform: translateY(-1px); }
 
 .boton--texto {
   min-height: 40px;
@@ -97,11 +122,30 @@
 .boton--texto:hover:not(:disabled) { text-decoration: underline; text-underline-offset: 4px; }
 
 .boton--peligro {
-  background: transparent;
-  border-color: var(--senal-borde);
+  background: color-mix(in srgb, var(--senal-fondo) 70%, transparent);
+  border-color: color-mix(in srgb, var(--senal-borde) 45%, transparent);
   color: var(--senal);
 }
-.boton--peligro:hover:not(:disabled) { background: var(--senal-fondo); }
+.boton--peligro:hover:not(:disabled) {
+  background: var(--senal-fondo);
+  border-color: var(--senal-borde);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--senal-borde) 16%, transparent);
+  transform: translateY(-1px);
+}
+
+/* Botón redondo solo con ícono (con aria-label y título) */
+.boton--icono {
+  width: 40px;
+  min-height: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--linea);
+  background: color-mix(in srgb, var(--superficie-2) 70%, transparent);
+  color: var(--oro-texto);
+}
+.boton--icono .boton__icono { font-size: 1.2rem; }
+.boton--icono:hover:not(:disabled) { border-color: var(--oro); box-shadow: var(--brillo-oro); transform: translateY(-1px); }
 
 .boton--cargando .boton__texto { opacity: 0.6; }
 .boton--cargando::before {

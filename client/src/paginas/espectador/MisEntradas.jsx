@@ -11,6 +11,8 @@ import Boton from '../../componentes/ui/Boton.jsx';
 import Modal from '../../componentes/ui/Modal.jsx';
 import Aviso from '../../componentes/ui/Aviso.jsx';
 import { Cargando, ErrorCarga, Esqueleto, Vacio } from '../../componentes/ui/Estados.jsx';
+import { usePaginacion } from '../../hooks/usePaginacion.js';
+import Paginacion from '../../componentes/ui/Paginacion.jsx';
 import './MisEntradas.css';
 
 function EntradasDeReserva({ id }) {
@@ -91,6 +93,7 @@ export default function MisEntradas() {
   const proximas = datos?.filter((r) => r.proxima && r.estado !== 'CANCELADA') ?? [];
   const historial = datos?.filter((r) => !r.proxima || r.estado === 'CANCELADA') ?? [];
   const lista = vista === 'proximas' ? proximas : historial;
+  const paginacion = usePaginacion(lista, 6);
 
   return (
     <div className="contenedor pagina mis-entradas">
@@ -101,8 +104,8 @@ export default function MisEntradas() {
           <p className="texto-2">Mostrá el código QR de cada entrada al encargado de sala en el ingreso.</p>
         </div>
         <div className="mis-entradas__pestanas" role="tablist" aria-label="Reservas">
-          <button type="button" role="tab" aria-selected={vista === 'proximas'} onClick={() => setVista('proximas')}>Próximas <span className="cifra">({proximas.length})</span></button>
-          <button type="button" role="tab" aria-selected={vista === 'historial'} onClick={() => setVista('historial')}>Historial <span className="cifra">({historial.length})</span></button>
+          <button type="button" role="tab" aria-selected={vista === 'proximas'} onClick={() => { setVista('proximas'); paginacion.setPagina(1); }}>Próximas <span className="cifra">({proximas.length})</span></button>
+          <button type="button" role="tab" aria-selected={vista === 'historial'} onClick={() => { setVista('historial'); paginacion.setPagina(1); }}>Historial <span className="cifra">({historial.length})</span></button>
         </div>
       </div>
 
@@ -120,9 +123,12 @@ export default function MisEntradas() {
       )}
 
       {lista.length > 0 && (
-        <ul className="mis-entradas__lista">
-          {lista.map((r) => <FilaReserva key={r.id} reserva={r} alCancelar={setACancelar} />)}
-        </ul>
+        <>
+          <ul className="mis-entradas__lista" key={`${vista}-${paginacion.pagina}`}>
+            {paginacion.visibles.map((r) => <FilaReserva key={r.id} reserva={r} alCancelar={setACancelar} />)}
+          </ul>
+          <Paginacion control={paginacion} etiqueta="Páginas de reservas" unidad="reservas" alCambiar={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
+        </>
       )}
 
       <Modal

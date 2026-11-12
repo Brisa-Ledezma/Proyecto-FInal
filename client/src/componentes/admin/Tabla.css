@@ -1,4 +1,7 @@
+.tabla-envoltura { display: flex; flex-direction: column; gap: var(--e-3); scroll-margin-top: calc(var(--alto-barra) + 16px); }
 .tabla-gestion { border: 1px solid var(--linea); border-radius: var(--r-medio); background: var(--superficie); overflow: hidden; }
+.tabla-gestion__cuerpo { animation: fundido 0.3s ease both; }
+.tabla-gestion tbody tr { transition: background-color var(--transicion); }
 .tabla-gestion table { width: 100%; }
 .tabla-gestion th {
   padding: 12px 14px;
@@ -20,17 +23,45 @@
 .tabla-gestion__orden { border: 0; background: none; padding: 0; font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
 .tabla-gestion__acciones { display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap; }
 
+/* Celular: cada fila es una tarjeta compacta. El dato principal va arriba sin
+   etiqueta; el resto, en tres columnas chicas con la etiqueta en letra pequeña. */
 @media (max-width: 760px) {
   .tabla-gestion { border: 0; background: none; overflow: visible; }
+  .tabla-gestion::after { display: none; }
   .tabla-gestion thead { display: none; }
-  .tabla-gestion tbody { display: flex; flex-direction: column; gap: var(--e-3); }
-  .tabla-gestion tr { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; padding: var(--e-4); border: 1px solid var(--linea); border-radius: var(--r-medio); background: var(--superficie); }
-  .tabla-gestion td { padding: 0; border: 0; display: flex; flex-direction: column; gap: 2px; text-align: left !important; min-width: 0; }
-  .tabla-gestion td::before { content: attr(data-etiqueta); font-family: var(--f-rotulo); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--texto-2); }
+  .tabla-gestion tbody { display: flex; flex-direction: column; gap: 10px; }
+  .tabla-gestion tr {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+    gap: 8px 10px;
+    padding: 12px 14px;
+    border: 1px solid var(--linea);
+    border-radius: var(--r-medio);
+    background: var(--superficie);
+  }
+  .tabla-gestion tbody tr:hover { background: var(--superficie); }
+  .tabla-gestion td { padding: 0; border: 0; display: flex; flex-direction: column; gap: 1px; text-align: left !important; min-width: 0; font-size: 0.9375rem; }
+  .tabla-gestion td::before { content: attr(data-etiqueta); font-family: var(--f-rotulo); font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--texto-2); }
   .tabla-gestion td > * { align-self: flex-start; max-width: 100%; }
-  .tabla-gestion td.ancho-completo { grid-column: 1 / -1; }
+  .tabla-gestion td.ancho-completo, .tabla-gestion td.movil-ancha { grid-column: 1 / -1; }
+  .tabla-gestion td.sin-etiqueta::before, .tabla-gestion td.movil-principal::before { display: none; }
+  .tabla-gestion td.movil-principal { order: -1; grid-column: 1 / -1; font-size: 1rem; padding-bottom: 6px; border-bottom: 1px solid var(--linea); }
+  .tabla-gestion td.movil-principal .texto-2 { font-size: 0.875rem; }
+  .tabla-gestion td.movil-oculta { display: none; }
   .tabla-gestion td.col-afiche { justify-content: center; }
-  .tabla-gestion td.col-afiche .afiche { width: 56px; }
-  .tabla-gestion td.sin-etiqueta::before { display: none; }
+  .tabla-gestion td.col-afiche .afiche { width: 48px; }
+  .tabla-gestion .medidor { min-width: 0; }
   .tabla-gestion__acciones { justify-content: flex-start; }
+  .tabla-gestion__acciones .boton--chico { min-height: 34px; padding: 4px 12px; font-size: 0.8125rem; }
+}
+
+/* Celular: el estado va en la esquina de la tarjeta y lo que sea solo para escritorio se oculta */
+.solo-movil { display: none; }
+@media (max-width: 760px) {
+  .tabla-gestion tr { position: relative; }
+  .tabla-gestion td.movil-esquina { position: absolute; top: 12px; right: 14px; }
+  .tabla-gestion td.movil-esquina::before { display: none; }
+  .tabla-gestion tr:has(.movil-esquina) td.movil-principal { padding-right: 112px; }
+  .solo-movil { display: inline; }
+  .solo-escritorio { display: none; }
 }

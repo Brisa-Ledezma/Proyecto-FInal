@@ -47,6 +47,13 @@
   --grafico-barra: #d6a84e;
   --grafico-barra-activa: #f1d592;
   --grafico-grilla: rgba(185, 170, 156, 0.16);
+  /* Series categóricas, validadas (daltonismo y contraste contra la superficie) */
+  --serie-1: #b8862e;
+  --serie-2: #22ab84;
+  --serie-3: #3987e5;
+  --serie-4: #d55181;
+  --serie-5: #9085e9;
+  --serie-otras: #6f6268;
 
   /* Estados de mensajes */
   --senal: #ff8577;
@@ -81,12 +88,14 @@
 
   /* Espaciado y formas */
   --e-1: 4px; --e-2: 8px; --e-3: 12px; --e-4: 16px; --e-5: 24px; --e-6: 32px; --e-7: 48px; --e-8: 64px;
-  --r-chico: 4px;
-  --r-medio: 10px;
-  --r-grande: 16px;
+  --r-chico: 8px;
+  --r-medio: 14px;
+  --r-grande: 20px;
+  --r-pildora: 999px;
   --sombra: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
   --ancho-max: 1240px;
   --alto-barra: 68px;
+  --margen-barra: clamp(16px, 3vw, 48px);
 
   --transicion: 160ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
@@ -127,6 +136,12 @@
     --grafico-barra: #9c7428;
     --grafico-barra-activa: #6e4f14;
     --grafico-grilla: rgba(94, 75, 69, 0.18);
+    --serie-1: #9c7428;
+    --serie-2: #1fa07a;
+    --serie-3: #2a78d6;
+    --serie-4: #c2406f;
+    --serie-5: #6250d6;
+    --serie-otras: #a8988e;
   }
 }
 
@@ -164,4 +179,10 @@
   --grafico-barra: #9c7428;
   --grafico-barra-activa: #6e4f14;
   --grafico-grilla: rgba(94, 75, 69, 0.18);
+  --serie-1: #9c7428;
+  --serie-2: #1fa07a;
+  --serie-3: #2a78d6;
+  --serie-4: #c2406f;
+  --serie-5: #6250d6;
+  --serie-otras: #a8988e;
 }

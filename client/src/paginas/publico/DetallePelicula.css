@@ -33,10 +33,20 @@
 }
 .detalle__nota { font-size: var(--t-chico); }
 
-@media (max-width: 720px) {
-  .detalle__ficha { grid-template-columns: 120px minmax(0, 1fr); gap: var(--e-4); }
-  .detalle__sinopsis { grid-column: 1 / -1; font-size: var(--t-base); }
+/* Celular: afiche chico a la izquierda, datos al lado y la sinopsis debajo */
+@media (max-width: 760px) {
+  .detalle__fondo { height: 360px; }
+  /* Filas: espacio · género · título · datos · espacio · sinopsis */
+  .detalle__ficha { grid-template-columns: 96px minmax(0, 1fr); grid-template-rows: 1fr auto auto auto 1fr auto; gap: 4px 14px; }
+  .detalle__afiche { grid-column: 1; grid-row: 1 / 6; }
   .detalle__info { display: contents; }
-  .detalle__info > :not(.detalle__sinopsis) { grid-column: 2; }
-  .detalle__funciones { padding: var(--e-4); }
+  .detalle__info > .rotulo { grid-column: 2; grid-row: 2; }
+  .detalle__titulo { grid-column: 2; grid-row: 3; }
+  .detalle__meta { grid-column: 2; grid-row: 4; }
+  .detalle__sinopsis { grid-row: 6; }
+  .detalle__titulo { font-size: 1.5rem; }
+  .detalle__meta { font-size: 0.875rem; }
+  .detalle__sinopsis { grid-column: 1 / -1; font-size: 0.9375rem; line-height: 1.55; margin-top: 8px; }
+  .detalle__funciones { padding: var(--e-4); gap: var(--e-3); border-radius: var(--r-medio); }
+  .detalle__volver { min-height: 32px; }
 }
