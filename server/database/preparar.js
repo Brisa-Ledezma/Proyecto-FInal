@@ -34,8 +34,15 @@ const TRIGGERS = [
    END`,
 ];
 
-// Cambios de esquema posteriores a la v1.0.0, para bases creadas antes.
+// Tablas que se aseguran en cada arranque: cambios posteriores a la v1.0.0 y la tabla
+// de sesiones. express-mysql-session intenta crearla al cargar el módulo, antes de que
+// exista la base en un primer arranque, así que se crea acá.
 const MIGRACIONES = [
+  `CREATE TABLE IF NOT EXISTS sessions (
+     session_id VARCHAR(128) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
+     expires    INT UNSIGNED NOT NULL,
+     data       MEDIUMTEXT COLLATE utf8mb4_bin
+   ) ENGINE=InnoDB`,
   `CREATE TABLE IF NOT EXISTS archivo (
      nombre     VARCHAR(80)  NOT NULL PRIMARY KEY,
      tipo_mime  VARCHAR(40)  NOT NULL,
@@ -85,6 +92,7 @@ export async function prepararBase({ reiniciar = false } = {}) {
     console.log(`→ Creando las tablas de "${database}"…`);
     const esquema = await fs.readFile(path.join(carpeta, 'schema.sql'), 'utf8');
     await conexion.query(esquema);
+    for (const migracion of MIGRACIONES) await conexion.query(migracion);
     await crearTriggers(conexion);
 
     console.log('→ Cargando datos de ejemplo…');
