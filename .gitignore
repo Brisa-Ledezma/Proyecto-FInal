@@ -1,18 +1,15 @@
 # Dependencias
 node_modules/
 
-# Builds
+# Builds y cachés
 dist/
 build/
+.vite/
 
 # Variables de entorno (contienen contraseñas)
 .env
 .env.*
 !.env.example
-
-# Afiches subidos por el administrador
-server/uploads/*
-!server/uploads/.gitkeep
 
 # Logs y sistema
 *.log
