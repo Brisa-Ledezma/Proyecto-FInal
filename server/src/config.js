@@ -1,5 +1,9 @@
 import 'dotenv/config';
 
+// Las fechas se manejan en hora local del cine (ver utils/fechas.js). Los servidores
+// en la nube corren en UTC, así que se fija la zona de Argentina si no viene definida.
+process.env.TZ ??= 'America/Argentina/Buenos_Aires';
+
 function requerida(nombre, valorPorDefecto) {
   const valor = process.env[nombre] ?? valorPorDefecto;
   if (valor === undefined) {
@@ -20,6 +24,16 @@ export const config = {
     user: process.env.DB_USER ?? 'root',
     password: process.env.DB_PASSWORD ?? '',
     database: process.env.DB_NAME ?? 'golden_screen',
+    // Desplazamiento horario de la sesión de MySQL, para que NOW() devuelva la hora del cine
+    // aunque el servidor de la base esté en UTC. Argentina no tiene horario de verano.
+    timezone: process.env.DB_ZONA_HORARIA ?? '-03:00',
+    // Conexión cifrada, obligatoria en las bases en la nube (Aiven).
+    // DB_SSL_CA: el certificado de la autoridad (CA) del proveedor, en texto PEM.
+    ssl: process.env.DB_SSL === 'true'
+      ? (process.env.DB_SSL_CA
+        ? { ca: process.env.DB_SSL_CA.replace(/\\n/g, '\n'), rejectUnauthorized: true }
+        : { rejectUnauthorized: false })
+      : undefined,
   },
 
   admin: {
