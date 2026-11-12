@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Cargando } from './componentes/ui/Estados.jsx';
 import Layout from './componentes/layout/Layout.jsx';
 import RutaProtegida from './componentes/layout/RutaProtegida.jsx';
+import RutaPublico from './componentes/layout/RutaPublico.jsx';
 import Acceso from './paginas/publico/Acceso.jsx';
 import Cartelera from './paginas/publico/Cartelera.jsx';
 import DetallePelicula from './paginas/publico/DetallePelicula.jsx';
@@ -34,9 +35,13 @@ export default function App() {
     <Suspense fallback={<Cargando />}>
     <Routes>
       <Route element={<Layout />}>
-        {/* Públicas */}
-        <Route path="/" element={<Cartelera />} />
-        <Route path="/pelicula/:id" element={<DetallePelicula />} />
+        {/* Públicas (el encargado de sala no las ve) */}
+        <Route element={<RutaPublico />}>
+          <Route path="/" element={<Cartelera />} />
+          <Route path="/pelicula/:id" element={<DetallePelicula />} />
+        </Route>
+
+        {/* Públicas para todos */}
         <Route path="/acceso" element={<Acceso />} />
         <Route path="/verificar/:token" element={<Verificar />} />
         <Route path="/privacidad" element={<Privacidad />} />

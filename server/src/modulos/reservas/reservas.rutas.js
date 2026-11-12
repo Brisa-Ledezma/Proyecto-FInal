@@ -3,7 +3,7 @@ import { config } from '../../config.js';
 import { consultar, consultarUno, enTransaccion } from '../../db.js';
 import { conflicto, manejar, noEncontrado, solicitudInvalida } from '../../utils/errores.js';
 import { idValido } from '../../utils/validacion.js';
-import { requerirRol, requerirSesion, ROLES } from '../../middlewares/sesion.js';
+import { requerirRol, ROLES } from '../../middlewares/sesion.js';
 import { cancelarReservasPendientes } from './reservas.servicio.js';
 
 export const rutasReservas = Router();
@@ -33,7 +33,7 @@ const resumenFuncion = (f) => ({
 });
 
 /** RF-04 · CU-04, paso 2: mapa de butacas por filas con el estado de cada una. */
-rutasReservas.get('/funciones/:id/butacas', requerirSesion, manejar(async (req, res) => {
+rutasReservas.get('/funciones/:id/butacas', requerirRol(ROLES.ESPECTADOR), manejar(async (req, res) => {
   const id = idValido(req.params.id);
   const funcion = id && await datosFuncion(id);
   if (!funcion) throw noEncontrado('No encontramos esta función.');
