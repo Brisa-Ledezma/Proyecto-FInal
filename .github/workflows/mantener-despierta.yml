@@ -1,0 +1,23 @@
+# El plan gratuito de Render apaga el servicio tras 15 minutos sin tráfico y tarda
+# cerca de un minuto en despertarlo. Este workflow lo consulta cada 10 minutos para
+# que no llegue a dormirse. Con un solo servicio, las 750 horas mensuales gratuitas
+# alcanzan para tenerlo encendido todo el mes. La consulta a /api/salud también
+# toca la base, así que Aiven no la ve inactiva.
+# Nota: GitHub ejecuta los workflows programados solo desde la rama por defecto (main)
+# y puede demorarlos algunos minutos.
+
+name: Mantener despierta
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    if: vars.APP_URL != ''
+    steps:
+      - run: curl --silent --max-time 90 --output /dev/null --write-out "%{http_code}\n" "${{ vars.APP_URL }}/api/salud"

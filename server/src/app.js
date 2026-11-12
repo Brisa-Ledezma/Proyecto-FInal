@@ -26,7 +26,7 @@ export function crearApp() {
   app.get('/api/salud', async (req, res) => {
     try {
       await pool.query('SELECT 1');
-      res.json({ estado: 'ok', servicio: 'Golden Screen API', base: 'ok' });
+      res.json({ estado: 'ok', servicio: 'Golden Screen API', base: 'ok', version: process.env.VERSION ?? 'local' });
     } catch {
       res.status(503).json({ estado: 'error', servicio: 'Golden Screen API', base: 'sin conexión' });
     }
