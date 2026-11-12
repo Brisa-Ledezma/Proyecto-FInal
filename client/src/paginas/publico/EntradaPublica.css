@@ -41,3 +41,108 @@
   .entrada-publica__tarjeta { padding: var(--e-4); }
   .entrada-publica__acciones > * { flex: 1 1 100%; }
 }
+
+/* Ticket dorado de regalo: la sombra va en el envoltorio porque la máscara de las muescas la recortaría. */
+.ticket-regalo {
+  filter: drop-shadow(0 8px 22px rgba(214, 168, 78, 0.45));
+  animation: aparecer 0.5s ease both;
+}
+
+/* Papel: muescas a los costados, troquel entre talón y cuerpo y un reflejo que lo recorre. */
+.ticket-regalo__papel {
+  --muesca-regalo: 14px;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: stretch;
+  color: #1a1004;
+  background: var(--oro-metal);
+  background-size: 220% 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  isolation: isolate;
+  -webkit-mask:
+    radial-gradient(circle var(--muesca-regalo) at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--muesca-regalo) at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+          mask:
+    radial-gradient(circle var(--muesca-regalo) at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--muesca-regalo) at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+  animation: reflejo 6s ease-in-out infinite;
+}
+/* Marco interior grabado */
+.ticket-regalo__papel::before {
+  content: '';
+  position: absolute;
+  inset: 7px calc(var(--muesca-regalo) + 4px);
+  border: 1.5px solid rgba(26, 16, 4, 0.35);
+  border-radius: 3px;
+  pointer-events: none;
+  z-index: -1;
+}
+/* Barrido de luz */
+.ticket-regalo__papel::after {
+  content: '';
+  position: absolute;
+  inset: -20% auto -20% -40%;
+  width: 30%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+  transform: skewX(-18deg) translateX(-120%);
+  animation: barrido-regalo 4.5s ease-in-out 0.6s infinite;
+  pointer-events: none;
+}
+.ticket-regalo .destellos__punto { background: #fffaf0; }
+
+.ticket-regalo__talon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: var(--e-4) var(--e-3) var(--e-4) calc(var(--muesca-regalo) + var(--e-3));
+  border-right: 2px dashed rgba(26, 16, 4, 0.45);
+  font-family: var(--f-rotulo);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.ticket-regalo__talon svg { width: 34px; height: 34px; }
+
+.ticket-regalo__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--e-5) calc(var(--muesca-regalo) + var(--e-4)) var(--e-5) var(--e-4);
+  text-align: center;
+}
+.ticket-regalo__rotulo {
+  font-family: var(--f-rotulo);
+  font-size: var(--t-rotulo);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(26, 16, 4, 0.75);
+}
+.ticket-regalo__texto {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 1rem + 1.1vw, 1.625rem);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+@keyframes barrido-regalo {
+  0%, 55% { transform: skewX(-18deg) translateX(-120%); }
+  100% { transform: skewX(-18deg) translateX(560%); }
+}
+
+@media (max-width: 420px) {
+  .ticket-regalo__papel { --muesca-regalo: 11px; }
+  .ticket-regalo__talon { padding-right: var(--e-2); }
+  .ticket-regalo__talon span { display: none; }
+  .ticket-regalo__talon svg { width: 28px; height: 28px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticket-regalo { animation: none; }
+  .ticket-regalo__papel { animation: none; }
+  .ticket-regalo__papel::after { display: none; }
+}
