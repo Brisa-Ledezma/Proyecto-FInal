@@ -16,9 +16,16 @@ export function generarCodigoEntrada() {
   return `GS-${aleatorio(4)}-${aleatorio(4)}`;
 }
 
-/** Normaliza lo que tipea el encargado: mayúsculas, sin espacios y con guiones. */
+/**
+ * Normaliza lo que lee o tipea el encargado: mayúsculas, sin espacios y con guiones.
+ * El QR guarda el enlace público de la entrada (…/entrada/GS-XXXX-XXXX): de ese texto
+ * se toma solo el código. Los QR que guardaban el código solo siguen funcionando.
+ */
 export function normalizarCodigoEntrada(texto) {
-  const limpio = String(texto ?? '').toUpperCase().replace(/[^0-9A-Z]/g, '');
+  const mayusculas = String(texto ?? '').toUpperCase();
+  const enEnlace = mayusculas.match(/(?<![0-9A-Z])GS-([0-9A-Z]{4})-([0-9A-Z]{4})(?![0-9A-Z])/);
+  if (enEnlace) return `GS-${enEnlace[1]}-${enEnlace[2]}`;
+  const limpio = mayusculas.replace(/[^0-9A-Z]/g, '');
   const sinPrefijo = limpio.startsWith('GS') ? limpio.slice(2) : limpio;
   if (sinPrefijo.length !== 8) return null;
   return `GS-${sinPrefijo.slice(0, 4)}-${sinPrefijo.slice(4)}`;

@@ -30,6 +30,7 @@ function Resultado({ resultado }) {
       <div>
         <p className="resultado__titulo">{aceptada ? 'Entrada válida' : 'Entrada rechazada'}</p>
         {butaca && <p className="resultado__butaca cifra">Fila {butaca.fila} · Butaca {butaca.numero}</p>}
+        {butaca?.titular && <p>Titular: <strong>{butaca.titular}</strong>{butaca.pelicula && <> · {butaca.pelicula}</>}</p>}
         {!aceptada && <p>{motivo}</p>}
         {codigo && <p className="resultado__codigo cifra">{codigo}</p>}
       </div>

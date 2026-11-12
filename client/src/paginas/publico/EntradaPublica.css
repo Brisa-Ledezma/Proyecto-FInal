@@ -1,0 +1,43 @@
+.entrada-publica { align-items: center; }
+
+.entrada-publica__tarjeta {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+  padding: var(--e-6);
+  position: relative;
+  overflow: hidden;
+}
+.entrada-publica__tarjeta::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--oro-metal);
+}
+
+.entrada-publica__sello { display: flex; align-items: center; gap: var(--e-3); }
+.entrada-publica__sello > svg { width: 48px; height: 48px; flex: none; color: var(--petroleo-texto); }
+.entrada-publica__titulo { font-family: var(--f-display); font-size: var(--t-titulo); line-height: 1.1; color: var(--oro-texto); }
+.entrada-publica__texto { font-size: var(--t-medio); line-height: 1.5; }
+
+.entrada-publica__nota {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: var(--e-3);
+  border-radius: var(--r-medio);
+  background: var(--superficie-2);
+  color: var(--texto-2);
+  font-size: var(--t-chico);
+}
+.entrada-publica__nota svg { width: 22px; height: 22px; flex: none; color: var(--oro-texto); }
+
+.entrada-publica__acciones { display: flex; flex-wrap: wrap; gap: var(--e-3); }
+
+@media (max-width: 520px) {
+  .entrada-publica__tarjeta { padding: var(--e-4); }
+  .entrada-publica__acciones > * { flex: 1 1 100%; }
+}
