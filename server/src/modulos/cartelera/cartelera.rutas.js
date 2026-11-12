@@ -80,6 +80,33 @@ rutasCartelera.get('/cartelera', manejar(async (req, res) => {
   });
 }));
 
+/**
+ * RF-03 · CU-03: todas las películas en cartel (con al menos una función vigente),
+ * sin elegir el día. Cada una trae sus próximas funciones y los días con funciones.
+ */
+rutasCartelera.get('/cartelera/en-cartel', manejar(async (req, res) => {
+  const funciones = await consultar(`${FUNCIONES_VIGENTES} ORDER BY f.fecha_hora_inicio`);
+  const idsPeliculas = [...new Set(funciones.map((f) => f.id_pelicula))];
+  const peliculas = idsPeliculas.length
+    ? await consultar('SELECT * FROM pelicula WHERE id_pelicula IN (?)', [idsPeliculas])
+    : [];
+  const porId = new Map(peliculas.map((p) => [p.id_pelicula, p]));
+
+  res.json({
+    hoy: hoyTexto(),
+    // En el orden de su próxima función: lo que empieza antes aparece primero.
+    peliculas: idsPeliculas.map((id) => {
+      const propias = funciones.filter((f) => f.id_pelicula === id).map(aFuncion);
+      return {
+        ...aPelicula(porId.get(id)),
+        cantidadFunciones: propias.length,
+        dias: [...new Set(propias.map((f) => String(f.inicio).slice(0, 10)))],
+        proximas: propias.slice(0, 4),
+      };
+    }),
+  });
+}));
+
 /** CU-03, paso 4: detalle de la película con sus funciones de la fecha elegida. */
 rutasCartelera.get('/peliculas/:id', manejar(async (req, res) => {
   const id = idValido(req.params.id);

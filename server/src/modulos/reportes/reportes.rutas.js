@@ -132,7 +132,7 @@ rutasReportes.get('/tablero', manejar(async (req, res) => {
                 WHERE DATE(f.fecha_hora_inicio) = ? AND f.estado <> 'CANCELADA' ORDER BY f.fecha_hora_inicio`, [dia]),
     consultar(`SELECT p.titulo, SUM(i.monto) AS total, COUNT(*) AS pagos FROM ingreso i
                  JOIN funcion f ON f.id_funcion = i.id_funcion JOIN pelicula p ON p.id_pelicula = f.id_pelicula
-                WHERE DATE(i.fecha_hora) BETWEEN ? AND ? GROUP BY p.id_pelicula ORDER BY total DESC LIMIT 5`, [desdeSemana, dia]),
+                WHERE DATE(i.fecha_hora) BETWEEN ? AND ? GROUP BY p.id_pelicula ORDER BY total DESC`, [desdeSemana, dia]),
   ]);
 
   const mapa = new Map(semana.map((d) => [d.dia, Number(d.total)]));

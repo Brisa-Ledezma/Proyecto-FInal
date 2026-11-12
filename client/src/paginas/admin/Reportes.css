@@ -1,4 +1,51 @@
-.reportes__filtros { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: var(--e-3); padding: var(--e-4); align-items: start; }
+/* Filtros en una sola fila: período desplegable, sala y película */
+.reportes__filtros { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--e-3); }
+.reportes__filtro { min-width: 190px; }
+.reportes__filtro .campo__etiqueta { font-size: 0.8125rem; color: var(--texto-2); font-weight: 500; }
+.reportes__filtro .campo__control { min-height: 46px; border-radius: var(--r-pildora); padding-left: 16px; background-color: var(--superficie); }
+.reportes__limpiar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 0;
+  background: none;
+  color: var(--oro-texto);
+  font-weight: 600;
+  cursor: pointer;
+}
+.reportes__limpiar:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Frase de resumen del período */
+.reporte-frase {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  padding: var(--e-4) var(--e-5);
+  border-radius: var(--r-grande);
+  background:
+    radial-gradient(ellipse 60% 120% at 0% 0%, color-mix(in srgb, var(--oro) 14%, transparent), transparent 70%),
+    var(--superficie);
+  border: 1px solid color-mix(in srgb, var(--oro) 35%, var(--linea));
+  font-size: var(--t-medio);
+  animation: aparecer 0.4s ease both;
+}
+.reporte-frase strong { font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem); font-weight: 500; line-height: 1.1; }
+.reporte-frase span:last-child { color: var(--texto-2); }
+
+.reportes__graficos { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: var(--e-4); }
+.reportes__graficos--pareja { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+@media (max-width: 980px) { .reportes__graficos, .reportes__graficos--pareja { grid-template-columns: 1fr; } }
+
+.reporte-salas { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.reporte-salas li { display: grid; grid-template-columns: 80px minmax(0, 1fr) 120px; align-items: center; gap: 12px; }
+.reporte-salas__nombre { font-weight: 600; }
+.reporte-salas__pista { height: 10px; border-radius: 999px; background: var(--superficie-3); overflow: hidden; }
+.reporte-salas__pista span { display: block; height: 100%; border-radius: 999px; background: var(--grafico-barra); transition: width 0.6s ease; }
+.reporte-salas strong { text-align: right; font-weight: 500; }
+
 .reportes__contenido { display: flex; flex-direction: column; gap: var(--e-5); }
 
 .reporte-cifra { display: flex; flex-direction: column; gap: 2px; padding: var(--e-4); border: 1px solid var(--linea); border-left: 3px solid var(--oro); border-radius: var(--r-medio); background: var(--superficie); }
@@ -11,9 +58,25 @@
 .reporte-total span { font-family: var(--f-rotulo); letter-spacing: 0.12em; text-transform: uppercase; color: var(--texto-2); }
 .reporte-total strong { font-size: 1.75rem; font-weight: 500; }
 
-.encabezado-pagina > .reporte-pestanas { flex-direction: row; }
-.reporte-pestanas { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--superficie-2); }
-.reporte-pestanas button { min-height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: var(--texto-2); font-weight: 600; cursor: pointer; }
-.reporte-pestanas button[aria-selected='true'] { background: var(--telon); color: #fff6dc; box-shadow: var(--brillo-oro); }
-.reporte-pestanas--grandes button { min-height: 46px; padding: 0 22px; font-size: 1rem; }
 .col-ocupacion { min-width: 200px; }
+
+/* Reportes en celular */
+@media (max-width: 760px) {
+  .reportes__filtros { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .reportes__filtros .selector-rango { grid-column: 1 / -1; }
+  .reportes__filtro { min-width: 0; }
+  .reportes__filtro .campo__etiqueta { display: none; }
+  .reportes__filtro .campo__control { min-height: 42px; font-size: 0.875rem; padding-left: 12px; padding-right: 30px; }
+  .reportes__limpiar { grid-column: 1 / -1; min-height: 32px; justify-self: start; padding: 0; }
+  .reporte-frase { padding: var(--e-3) var(--e-4); font-size: 0.9375rem; }
+  .reporte-frase strong { font-size: 1.75rem; }
+  .reporte-cifra { padding: 10px 12px; }
+  .reporte-cifra strong { font-size: 1.25rem; }
+  .reporte-cifra .texto-2 { font-size: 0.75rem; line-height: 1.3; }
+  .reporte-cifra .rotulo { font-size: 0.6875rem; }
+  .reporte-panel { padding: var(--e-4); gap: var(--e-3); }
+  .reporte-salas li { grid-template-columns: 56px minmax(0, 1fr) auto; gap: 8px; font-size: 0.875rem; }
+  .reporte-detalle__cabecera p { font-size: 0.8125rem; }
+  .reporte-total { padding: var(--e-3) 4px; }
+  .reporte-total strong { font-size: 1.375rem; }
+}

@@ -81,7 +81,14 @@ rutasFunciones.get('/', manejar(async (req, res) => {
   );
   const salas = await consultar('SELECT id_sala AS id, nombre FROM sala ORDER BY nombre');
   const peliculas = await consultar('SELECT id_pelicula AS id, titulo, duracion_min AS duracionMin FROM pelicula WHERE activa = 1 ORDER BY titulo');
-  res.json({ fecha, funciones: funciones.map(aFuncion), salas, peliculas });
+  // Días con funciones alrededor de la fecha, para marcarlos en el calendario.
+  const dias = await consultar(
+    `SELECT DATE_FORMAT(fecha_hora_inicio, '%Y-%m-%d') AS dia, COUNT(*) AS cantidad FROM funcion
+      WHERE estado <> 'CANCELADA' AND fecha_hora_inicio BETWEEN DATE_SUB(?, INTERVAL 62 DAY) AND DATE_ADD(?, INTERVAL 62 DAY)
+      GROUP BY dia`,
+    [fecha, fecha],
+  );
+  res.json({ fecha, funciones: funciones.map(aFuncion), salas, peliculas, diasConFunciones: Object.fromEntries(dias.map((d) => [d.dia, d.cantidad])) });
 }));
 
 /** Verificación previa para mostrar el fin calculado y el conflicto mientras se completa el formulario. */

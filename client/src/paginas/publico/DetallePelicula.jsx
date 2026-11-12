@@ -34,7 +34,7 @@ export default function DetallePelicula() {
       <div className="detalle__fondo" aria-hidden="true" style={p.afiche ? { backgroundImage: `url(${p.afiche})` } : undefined} />
       <div className="contenedor pagina detalle__contenido">
         <CordonPasos actual={2} />
-        <Boton variante="texto" a={`/${p.fecha ? `?fecha=${p.fecha}` : ''}`} icono={<ArrowLeft />} className="detalle__volver">Volver a la cartelera</Boton>
+        <Boton variante="texto" a="/" icono={<ArrowLeft />} className="detalle__volver">Volver a la cartelera</Boton>
 
         <section className="detalle__ficha">
           <div className="detalle__afiche"><Afiche pelicula={p} /></div>

@@ -61,6 +61,7 @@ export default function App() {
           <Route path="/admin" element={<Tablero />} />
           <Route path="/admin/funciones" element={<Funciones />} />
           <Route path="/admin/reportes" element={<Reportes />} />
+          <Route path="/admin/reportes/:tipo" element={<Reportes />} />
           <Route path="/admin/personal" element={<Personal />} />
         </Route>
 

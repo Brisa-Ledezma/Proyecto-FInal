@@ -154,7 +154,7 @@ export default function Salas() {
       ) : (
         <ul className="salas">
           {datos.salas.map((s) => (
-            <li key={s.id} className="sala-tarjeta">
+            <li key={s.id} className="sala-tarjeta brilla brilla--elevar">
               <div className="sala-tarjeta__pantalla" aria-hidden="true" />
               <h2 className="sala-tarjeta__nombre">{s.nombre}</h2>
               <p className="sala-tarjeta__capacidad"><strong className="cifra">{s.capacidad}</strong> butacas</p>

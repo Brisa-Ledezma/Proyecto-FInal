@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { EnvelopeSimpleOpen, Eye, EyeSlash } from '@phosphor-icons/react';
 import { api } from '../../api/cliente.js';
@@ -147,8 +147,10 @@ function FormRegistro({ alIrAIngresar }) {
         <Campo etiqueta="Apellido" autoComplete="family-name" value={f.valores.apellido} onChange={f.cambiar('apellido')} error={f.errores.apellido} />
       </div>
       <Campo etiqueta="Correo electrónico" type="email" autoComplete="email" value={f.valores.email} onChange={f.cambiar('email')} error={f.errores.email} />
-      <Campo etiqueta="Fecha de nacimiento" type="date" max={maximo} value={f.valores.fechaNacimiento} onChange={f.cambiar('fechaNacimiento')} error={f.errores.fechaNacimiento} ayuda="Tenés que tener 16 años o más." />
-      <CampoContrasena valor={f.valores.contrasena} alCambiar={f.cambiar('contrasena')} error={f.errores.contrasena} ayuda="Al menos 8 caracteres." autoComplete="new-password" />
+      <div className="formulario__fila">
+        <Campo etiqueta="Fecha de nacimiento" type="date" max={maximo} value={f.valores.fechaNacimiento} onChange={f.cambiar('fechaNacimiento')} error={f.errores.fechaNacimiento} ayuda="16 años o más." />
+        <CampoContrasena valor={f.valores.contrasena} alCambiar={f.cambiar('contrasena')} error={f.errores.contrasena} ayuda="Al menos 8 caracteres." autoComplete="new-password" />
+      </div>
       <Casilla checked={f.valores.aceptaPrivacidad} onChange={f.cambiar('aceptaPrivacidad')} error={f.errores.aceptaPrivacidad}>
         Leí y acepto la <Link to="/privacidad" target="_blank" rel="noopener">política de privacidad</Link>. Mis datos se tratan según la Ley 25.326.
       </Casilla>
@@ -178,25 +180,55 @@ export default function Acceso() {
     <div className="acceso">
       <aside className="acceso__escena">
         <Destellos />
+        <div className="acceso__foco" aria-hidden="true" />
         <div className="acceso__escena-contenido">
-          <LogoCompleto ancho={300} />
+          <LogoCompleto ancho={280} />
           <p className="acceso__lema">Elegí tu butaca desde casa y llegá con la entrada en el celular.</p>
+          <ul className="acceso__pasos" aria-label="Cómo funciona">
+            <li><span className="cifra">1</span> Elegí la película y el horario</li>
+            <li><span className="cifra">2</span> Marcá tus butacas en el mapa</li>
+            <li><span className="cifra">3</span> Pagá y recibí la entrada con QR</li>
+          </ul>
         </div>
       </aside>
 
       <section className="acceso__panel">
-        <div className="ventanilla">
-          <div className="ventanilla__arco" aria-hidden="true" />
-          <h1 className="ventanilla__titulo">{modo === 'registro' ? 'Crear cuenta' : 'Ingresá'}</h1>
-          <div className="ventanilla__pestanas" role="tablist" aria-label="Acceso">
+        <div className={`ventanilla ventanilla--${modo}`}>
+          <div className="ventanilla__luces" aria-hidden="true">{Array.from({ length: 9 }, (_, i) => <span key={i} style={{ '--i': i }} />)}</div>
+          <h1 key={modo} className="ventanilla__titulo">{modo === 'registro' ? 'Crear cuenta' : 'Ingresá'}</h1>
+          <p className="ventanilla__bajada">{modo === 'registro' ? 'Registrate gratis para reservar tus butacas.' : 'Qué bueno verte de nuevo en la sala.'}</p>
+          <div className="ventanilla__pestanas" role="tablist" aria-label="Acceso" data-modo={modo}>
+            <span className="ventanilla__indicador" aria-hidden="true" />
             <button type="button" role="tab" aria-selected={modo === 'ingresar'} onClick={() => cambiarModo('ingresar')}>Iniciar sesión</button>
             <button type="button" role="tab" aria-selected={modo === 'registro'} onClick={() => cambiarModo('registro')}>Registrarme</button>
           </div>
-          {modo === 'registro'
-            ? <FormRegistro alIrAIngresar={() => cambiarModo('ingresar')} />
-            : <FormIngresar alIrARegistro={() => cambiarModo('registro')} />}
+          <AltoAnimado>
+            <div key={modo} className={`ventanilla__form ventanilla__form--${modo}`}>
+              {modo === 'registro'
+                ? <FormRegistro alIrAIngresar={() => cambiarModo('ingresar')} />
+                : <FormIngresar alIrARegistro={() => cambiarModo('registro')} />}
+            </div>
+          </AltoAnimado>
         </div>
       </section>
+    </div>
+  );
+}
+
+/** Contenedor que acompaña con una transición los cambios de alto de su contenido. */
+function AltoAnimado({ children }) {
+  const interior = useRef(null);
+  const [alto, setAlto] = useState('auto');
+  useLayoutEffect(() => {
+    const el = interior.current;
+    if (!el) return undefined;
+    const obs = new ResizeObserver(([e]) => setAlto(e.borderBoxSize?.[0]?.blockSize ?? e.contentRect.height));
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <div className="alto-animado" style={{ height: alto }}>
+      <div ref={interior}>{children}</div>
     </div>
   );
 }

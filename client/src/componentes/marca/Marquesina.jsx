@@ -1,7 +1,14 @@
-import { diaCorto, numeroDia } from '../../utiles/formato.js';
+import { diaCorto, fechaISO, numeroDia, sumarDias } from '../../utiles/formato.js';
 import './Marquesina.css';
 
-/** Selector de fechas: la fecha elegida se enciende con lamparitas (RF-03). */
+function rotulo(fecha) {
+  const hoy = fechaISO();
+  if (fecha === hoy) return 'Hoy';
+  if (fecha === sumarDias(hoy, 1)) return 'Mañana';
+  return diaCorto(fecha);
+}
+
+/** Selector de fechas en píldoras: la elegida se enciende (RF-03). */
 export default function Marquesina({ fechas, seleccionada, alElegir, etiqueta = 'Elegí la fecha' }) {
   return (
     <div className="marquesina" role="group" aria-label={etiqueta}>
@@ -15,8 +22,8 @@ export default function Marquesina({ fechas, seleccionada, alElegir, etiqueta = 
             aria-pressed={activa}
             onClick={() => alElegir(fecha)}
           >
-            <span className="marquesina__dia">{diaCorto(fecha)}</span>
-            <span className="marquesina__numero">{numeroDia(fecha)}</span>
+            <span className="marquesina__dia">{rotulo(fecha)}</span>
+            <span className="marquesina__numero cifra">{numeroDia(fecha)}</span>
           </button>
         );
       })}

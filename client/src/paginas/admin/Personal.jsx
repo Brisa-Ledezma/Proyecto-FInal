@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Power, UserCircle } from '@phosphor-icons/react';
+import { Plus, Power, QrCode, ShieldCheck } from '@phosphor-icons/react';
 import { api } from '../../api/cliente.js';
 import { useCarga } from '../../hooks/useCarga.js';
 import { useNotificar } from '../../contexto/NotificacionesContexto.jsx';
@@ -13,6 +13,7 @@ import Estado from '../../componentes/ui/Estado.jsx';
 import Modal from '../../componentes/ui/Modal.jsx';
 import { Cargando, ErrorCarga } from '../../componentes/ui/Estados.jsx';
 import './Admin.css';
+import './Personal.css';
 
 const ROLES = { ENCARGADO_SALA: 'Encargado de sala', ADMINISTRADOR: 'Administrador' };
 
@@ -111,22 +112,27 @@ export default function Personal() {
       </div>
 
       <Tabla
+        className="tabla-personal"
+        unidad="cuentas"
         titulo="Cuentas del personal"
         filas={datos}
         claseFila={(c) => (c.activo ? '' : 'inactiva')}
         columnas={[
-          { clave: 'nombre', titulo: 'Nombre', clase: 'ancho-completo', render: (c) => (
-            <div className="celda-titulo">
-              <strong><UserCircle weight="duotone" aria-hidden="true" style={{ verticalAlign: '-3px', marginRight: 6 }} />{c.nombre} {c.apellido}{c.esPropia && <span className="texto-2"> (tu cuenta)</span>}</strong>
-              <span className="texto-2">{c.email}</span>
+          { clave: 'nombre', titulo: 'Nombre', clase: 'ancho-completo', movil: 'principal', render: (c) => (
+            <div className="personal__persona">
+              <span className={`personal__avatar personal__avatar--${c.rol === 'ADMINISTRADOR' ? 'admin' : 'encargado'}`} aria-hidden="true">{`${c.nombre[0] ?? ''}${c.apellido[0] ?? ''}`.toUpperCase()}</span>
+              <span className="personal__datos">
+                <strong>{c.nombre} {c.apellido}{c.esPropia && <span className="personal__propia">Tu cuenta</span>}</strong>
+                <span className="texto-2">{c.email}</span>
+              </span>
             </div>
           ) },
-          { clave: 'rol', titulo: 'Rol', render: (c) => ROLES[c.rol] },
+          { clave: 'rol', titulo: 'Rol', render: (c) => <span className="personal__rol">{c.rol === 'ADMINISTRADOR' ? <ShieldCheck weight="duotone" aria-hidden="true" /> : <QrCode weight="duotone" aria-hidden="true" />}{ROLES[c.rol]}</span> },
           { clave: 'alta', titulo: 'Alta', render: (c) => <span className="cifra">{fechaCorta(c.alta)}</span> },
-          { clave: 'estado', titulo: 'Estado', render: (c) => <Estado estado={c.activo ? 'ACTIVA' : 'INACTIVA'} /> },
+          { clave: 'estado', titulo: 'Estado', clase: 'personal__estado', render: (c) => <Estado estado={c.activo ? 'ACTIVA' : 'INACTIVA'} /> },
           { clave: 'acciones', titulo: 'Acciones', alinear: 'right', clase: 'ancho-completo sin-etiqueta', render: (c) => (
             <div className="tabla-gestion__acciones">
-              {c.esPropia ? <span className="texto-2">No podés desactivar tu propia cuenta</span>
+              {c.esPropia ? <span className="personal__aviso">No podés desactivar tu propia cuenta</span>
                 : c.activo
                   ? <Boton variante="peligro" tamano="chico" icono={<Power />} onClick={() => setDesactivando(c)}>Desactivar</Boton>
                   : <Boton variante="secundario" tamano="chico" icono={<Power />} onClick={() => cambiarEstado(c, 'activar')}>Activar</Boton>}

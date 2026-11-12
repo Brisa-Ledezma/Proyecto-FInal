@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PencilSimple, Plus, Prohibit } from '@phosphor-icons/react';
+import { CalendarBlank, ListBullets, PencilSimple, Plus, Prohibit } from '@phosphor-icons/react';
 import { api, query } from '../../api/cliente.js';
 import { useCarga } from '../../hooks/useCarga.js';
 import { useNotificar } from '../../contexto/NotificacionesContexto.jsx';
-import { duracion, fechaISO, fechaLarga, fechaRelativa, hora, moneda, sumarDias } from '../../utiles/formato.js';
-import Marquesina from '../../componentes/marca/Marquesina.jsx';
-import TiraFunciones from '../../componentes/admin/TiraFunciones.jsx';
+import { aFecha, duracion, fechaISO, fechaRelativa, hora, moneda, numero } from '../../utiles/formato.js';
+import Cronograma from '../../componentes/admin/Cronograma.jsx';
+import { SelectorDia } from '../../componentes/ui/Calendario.jsx';
 import Tabla from '../../componentes/admin/Tabla.jsx';
 import Campo from '../../componentes/ui/Campo.jsx';
 import Boton from '../../componentes/ui/Boton.jsx';
@@ -27,10 +27,10 @@ function validar(v) {
 }
 
 /** Formulario para programar o modificar una función (CU-11, CU-12) con verificación en vivo. */
-function FormularioFuncion({ funcion, fechaInicial, salas, peliculas, alGuardar, alCerrar }) {
+function FormularioFuncion({ funcion, fechaInicial, inicial, salas, peliculas, alGuardar, alCerrar }) {
   const [valores, setValores] = useState(funcion ? {
     idPelicula: String(funcion.pelicula.id), idSala: String(funcion.sala.id), fecha: funcion.inicio.slice(0, 10), hora: hora(funcion.inicio), precio: String(funcion.precio),
-  } : { idPelicula: '', idSala: '', fecha: fechaInicial, hora: '', precio: '' });
+  } : { idPelicula: '', idSala: inicial?.idSala ?? '', fecha: fechaInicial, hora: inicial?.hora ?? '', precio: '' });
   const [verificacion, setVerificacion] = useState(null);
   const [intentado, setIntentado] = useState(false);
   const [erroresServidor, setErroresServidor] = useState({});
@@ -126,7 +126,9 @@ export default function Funciones() {
   const [cancelando, setCancelando] = useState(null);
   const [enviando, setEnviando] = useState(false);
 
-  const fechas = useMemo(() => Array.from({ length: 14 }, (_, i) => sumarDias(hoy, i)), [hoy]);
+  const vista = parametros.get('vista') === 'lista' ? 'lista' : 'cronograma';
+  const [inicialNueva, setInicialNueva] = useState(null);
+  const nueva = (inicial = null) => { setInicialNueva(inicial); setEditando('nueva'); };
   const cambiarParam = (clave, valor) => {
     const p = new URLSearchParams(parametros);
     if (valor) p.set(clave, valor); else p.delete(clave);
@@ -138,6 +140,10 @@ export default function Funciones() {
 
   const funciones = datos.funciones.filter((f) => !sala || String(f.sala.id) === sala);
   const salasVisibles = datos.salas.filter((s) => !sala || String(s.id) === sala);
+  const activasDia = funciones.filter((f) => f.estado !== 'CANCELADA');
+  const programadasDia = funciones.filter((f) => f.estado === 'PROGRAMADA' && aFecha(f.inicio) > new Date()).length;
+  const canceladasDia = funciones.length - activasDia.length;
+  const vendidasDia = activasDia.reduce((a, f) => a + f.vendidas, 0);
 
   const cancelar = async () => {
     setEnviando(true);
@@ -154,12 +160,12 @@ export default function Funciones() {
   };
 
   const columnas = [
-    { clave: 'hora', titulo: 'Horario', render: (f) => <span className="cifra">{hora(f.inicio)} a {hora(f.fin)}</span> },
-    { clave: 'pelicula', titulo: 'Película', clase: 'ancho-completo', render: (f) => <div className="celda-titulo"><strong>{f.pelicula.titulo}</strong><span className="texto-2">{duracion(f.pelicula.duracionMin)} + 15 min de limpieza</span></div> },
+    { clave: 'hora', titulo: 'Horario', movil: 'oculta', render: (f) => <span className="cifra">{hora(f.inicio)} a {hora(f.fin)}</span> },
+    { clave: 'pelicula', titulo: 'Película', clase: 'ancho-completo', movil: 'principal', render: (f) => <div className="celda-titulo"><strong>{f.pelicula.titulo}</strong><span className="texto-2"><span className="solo-movil cifra">{hora(f.inicio)} a {hora(f.fin)}</span><span className="solo-escritorio">{duracion(f.pelicula.duracionMin)} + 15 min de limpieza</span></span></div> },
     { clave: 'sala', titulo: 'Sala', render: (f) => f.sala.nombre },
     { clave: 'precio', titulo: 'Precio', render: (f) => <span className="cifra">{moneda(f.precio)}</span> },
     { clave: 'vendidas', titulo: 'Vendidas', render: (f) => <span className="cifra">{f.vendidas} / {f.capacidad}</span> },
-    { clave: 'estado', titulo: 'Estado', render: (f) => <Estado estado={f.estado} /> },
+    { clave: 'estado', titulo: 'Estado', movil: 'esquina', render: (f) => <Estado estado={f.estado} /> },
     {
       clave: 'acciones', titulo: 'Acciones', alinear: 'right', clase: 'ancho-completo sin-etiqueta',
       render: (f) => f.estado === 'PROGRAMADA' && (
@@ -172,41 +178,59 @@ export default function Funciones() {
   ];
 
   return (
-    <div className="contenedor pagina admin">
+    <div className="contenedor pagina admin funciones">
       <div className="encabezado-pagina">
         <div>
           <span className="rotulo">Administración</span>
           <h1 className="titulo-pantalla">Funciones</h1>
           <p className="texto-2">El fin de cada función se calcula con la duración de la película más 15 minutos de limpieza.</p>
         </div>
-        <Boton variante="ticket" icono={<Plus weight="bold" />} onClick={() => setEditando('nueva')}>Nueva función</Boton>
+        <Boton variante="ticket" icono={<Plus weight="bold" />} onClick={() => nueva()}>Nueva función</Boton>
       </div>
 
-      <Marquesina fechas={fechas.includes(fecha) ? fechas : [fecha, ...fechas]} seleccionada={fecha} alElegir={(f) => cambiarParam('fecha', f === hoy ? '' : f)} etiqueta="Fecha de la programación" />
-
-      <div className="admin__filtros">
-        <h2 className="subtitulo" style={{ flex: 1 }}>
-          {['Hoy', 'Mañana'].includes(fechaRelativa(fecha)) ? `${fechaRelativa(fecha)} · ${fechaLarga(fecha)}` : fechaRelativa(fecha)}
-        </h2>
-        <Campo etiqueta="Sala" como="select" value={sala} onChange={(e) => cambiarParam('sala', e.target.value)}>
-          <option value="">Todas las salas</option>
-          {datos.salas.map((s) => <option key={s.id} value={s.id}>{s.nombre}</option>)}
-        </Campo>
+      <div className="funciones__barra">
+        <SelectorDia valor={fecha} alCambiar={(f) => cambiarParam('fecha', f === hoy ? '' : f)} marcados={datos.diasConFunciones} etiqueta="Fecha de la programación" />
+        <div className="funciones__filtros">
+          <Campo etiqueta="Sala" como="select" value={sala} onChange={(e) => cambiarParam('sala', e.target.value)} className="funciones__sala">
+            <option value="">Todas las salas</option>
+            {datos.salas.map((s) => <option key={s.id} value={s.id}>{s.nombre}</option>)}
+          </Campo>
+          <div className="reporte-pestanas" role="tablist" aria-label="Vista">
+            <button type="button" role="tab" aria-selected={vista === 'cronograma'} onClick={() => cambiarParam('vista', '')}><CalendarBlank weight="bold" aria-hidden="true" /> Cronograma</button>
+            <button type="button" role="tab" aria-selected={vista === 'lista'} onClick={() => cambiarParam('vista', 'lista')}><ListBullets weight="bold" aria-hidden="true" /> Lista</button>
+          </div>
+        </div>
       </div>
+
+      {funciones.length > 0 && (
+        <ul className="funciones__resumen" aria-label="Resumen del día">
+          <li><strong className="cifra">{activasDia.length}</strong> {activasDia.length === 1 ? 'función' : 'funciones'}</li>
+          <li><strong className="cifra">{programadasDia}</strong> por empezar</li>
+          <li><strong className="cifra">{numero(vendidasDia)}</strong> entradas vendidas</li>
+          {canceladasDia > 0 && <li><strong className="cifra">{canceladasDia}</strong> {canceladasDia === 1 ? 'cancelada' : 'canceladas'}</li>}
+        </ul>
+      )}
 
       {funciones.length === 0 ? (
-        <Vacio titulo="No hay funciones programadas para esta fecha" accion={<Boton variante="secundario" icono={<Plus />} onClick={() => setEditando('nueva')}>Programar una función</Boton>} />
+        <Vacio titulo={`No hay funciones programadas para ${fechaRelativa(fecha).toLowerCase() === 'hoy' ? 'hoy' : 'esta fecha'}`} accion={<Boton variante="secundario" icono={<Plus />} onClick={() => nueva()}>Programar una función</Boton>} />
+      ) : vista === 'cronograma' ? (
+        <Cronograma
+          key={fecha}
+          fecha={fecha}
+          salas={salasVisibles}
+          funciones={funciones}
+          alElegir={(f) => setEditando(f)}
+          alNueva={fecha >= hoy ? nueva : undefined}
+        />
       ) : (
-        <>
-          <TiraFunciones fecha={fecha} salas={salasVisibles} funciones={funciones} alElegir={(f) => f.estado === 'PROGRAMADA' && setEditando(f)} />
-          <Tabla titulo="Funciones del día" columnas={columnas} filas={funciones} claseFila={(f) => (f.estado === 'PROGRAMADA' ? '' : 'inactiva')} />
-        </>
+        <Tabla titulo="Funciones del día" unidad="funciones" columnas={columnas} filas={funciones} claseFila={(f) => (f.estado === 'PROGRAMADA' ? '' : 'inactiva')} />
       )}
 
       {editando && (
         <FormularioFuncion
           funcion={editando === 'nueva' ? null : editando}
           fechaInicial={fecha < hoy ? hoy : fecha}
+          inicial={editando === 'nueva' ? inicialNueva : null}
           salas={datos.salas}
           peliculas={datos.peliculas}
           alCerrar={() => setEditando(null)}

@@ -95,7 +95,39 @@ table { border-collapse: collapse; width: 100%; }
   50% { opacity: 1; transform: scale(1) rotate(45deg); }
 }
 
+@keyframes fundido { from { opacity: 0; } to { opacity: 1; } }
+
 .aparecer { animation: aparecer 0.4s ease both; }
+
+/* ---------- Brillo al pasar el cursor ----------
+ * Las superficies con .brilla se iluminan con un halo dorado que sigue al cursor
+ * (--mx y --my se actualizan desde el Layout) y el borde toma un tono oro. */
+.brilla {
+  position: relative;
+  isolation: isolate;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+.brilla::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(241, 213, 146, 0.13), transparent 45%);
+  transition: opacity 0.3s ease;
+}
+.brilla:hover::after { opacity: 1; }
+.brilla:hover {
+  border-color: color-mix(in srgb, var(--oro) 55%, var(--linea));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--oro) 18%, transparent), 0 14px 40px -18px rgba(214, 168, 78, 0.45);
+}
+.brilla--elevar:hover { transform: translateY(-3px); }
+
+/* Entrada suave de cada pantalla al navegar */
+.transicion-pantalla { flex: 1; display: flex; flex-direction: column; animation: entrada-pantalla 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@keyframes entrada-pantalla { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -103,4 +135,21 @@ table { border-collapse: collapse; width: 100%; }
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ---------- Celular: todo más compacto ---------- */
+@media (max-width: 760px) {
+  :root { --t-titulo: 1.5rem; --t-hero: 1.875rem; --t-grande: 1.25rem; --t-medio: 1.0625rem; }
+  .pagina { padding-block: var(--e-4) var(--e-6); gap: var(--e-4); }
+  .subtitulo { font-size: 1rem; }
+  .rotulo { font-size: 0.75rem; letter-spacing: 0.12em; }
+  .encabezado-pagina { gap: var(--e-3); align-items: stretch; }
+  .encabezado-pagina > div { gap: 4px; }
+  .encabezado-pagina > div > .texto-2 { font-size: 0.875rem; line-height: 1.45; }
+  /* La acción principal de la pantalla ocupa el ancho y es más baja */
+  .encabezado-pagina > .boton--ticket { width: 100%; min-height: 44px; }
+  .boton { min-height: 42px; }
+  .boton--ticket { padding: 10px 24px 10px 38px; font-size: 0.9375rem; }
+  .tarjeta { border-radius: var(--r-medio); }
+  .campo__control { min-height: 44px; }
 }

@@ -1,0 +1,46 @@
+.paginacion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+  padding-top: var(--e-2);
+}
+.paginacion__resumen { font-size: var(--t-chico); color: var(--texto-2); }
+.paginacion__botones { display: flex; align-items: center; gap: 6px; }
+.paginacion__numero,
+.paginacion__flecha {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--linea);
+  border-radius: var(--r-pildora);
+  background: var(--superficie);
+  color: var(--texto);
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: border-color var(--transicion), box-shadow var(--transicion), background-color var(--transicion), transform var(--transicion);
+}
+.paginacion__numero:hover:not([aria-current]),
+.paginacion__flecha:hover:not(:disabled) { border-color: var(--oro); transform: translateY(-1px); }
+.paginacion__numero[aria-current='page'] {
+  background: var(--telon);
+  border-color: var(--oro);
+  color: #fff6dc;
+  box-shadow: var(--brillo-oro);
+  cursor: default;
+}
+.paginacion__flecha { color: var(--oro-texto); }
+.paginacion__flecha:disabled { opacity: 0.4; cursor: not-allowed; }
+.paginacion__hueco { color: var(--texto-2); padding: 0 2px; }
+
+/* Celular: compacta y centrada */
+@media (max-width: 760px) {
+  .paginacion { flex-direction: column-reverse; align-items: center; gap: 6px; }
+  .paginacion__botones { gap: 4px; }
+  .paginacion__numero, .paginacion__flecha { min-width: 34px; height: 34px; padding: 0 8px; font-size: 0.875rem; }
+  .paginacion__resumen { font-size: 0.8125rem; }
+}
