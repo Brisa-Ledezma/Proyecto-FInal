@@ -19,13 +19,34 @@ Integrantes: Regina Bak y Brisa Ledezma.
 - **API REST:** Node.js + Express, sesiones con cookie HttpOnly guardadas en MySQL.
 - **Base de datos:** MySQL 8.
 - **Otros:** bcrypt para contraseñas, nodemailer para correos, multer para afiches, qrcode y html5-qrcode para las entradas.
+- **Infraestructura:** Docker y Docker Compose, GitHub Actions, GitHub Container Registry.
+- **Hosting:** Render (sitio y API, una sola imagen Docker) y Aiven (MySQL). Ver [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
 
-## Requisitos
+## Con Docker
+
+Solo hace falta [Docker Desktop](https://www.docker.com/products/docker-desktop/): Node y MySQL corren dentro de los contenedores.
+
+```bash
+cp .env.example .env        # completar MYSQL_ROOT_PASSWORD, ADMIN_EMAIL y ADMIN_PASSWORD
+docker compose up --build   # o: npm run docker:dev
+```
+
+| Servicio | Dirección |
+|---|---|
+| Sitio (Vite, recarga en vivo) | http://localhost:5173 |
+| API | http://localhost:3001/api/salud |
+| MySQL | `localhost:3307` (solo desde esta máquina) |
+
+La primera vez la API crea la base con los datos de ejemplo. Los datos quedan en el volumen `db_data`; `docker compose down -v` los borra. Para probar la imagen de producción (la misma que corre en Render): `npm run docker:prod` y abrir http://localhost:8080.
+
+## Sin Docker
+
+### Requisitos
 
 - Node.js 20 o superior.
 - MySQL 8 en ejecución.
 
-## Instalación
+### Instalación
 
 ```bash
 git clone https://github.com/Brisa-Ledezma/Proyecto-FInal.git
@@ -56,7 +77,7 @@ npm run dev
 
 Abrir **http://localhost:5173**.
 
-## Probarlo en el celular
+### Probarlo en el celular
 
 ```bash
 npm run dev:movil
@@ -142,3 +163,12 @@ server/                 API REST (Node.js + Express)
 - `develop`: integración.
 - `feature/*`: una rama por implementación, unida a `develop` al terminarla.
 - `release/*`: preparación de cada versión.
+- `test`: producción. Cada push se despliega solo, sin confirmaciones: `npm run desplegar` integra `develop` en `test` y la sube (ver [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md)).
+
+## Despliegue
+
+```bash
+npm run desplegar
+```
+
+GitHub Actions verifica la API contra un MySQL de prueba, construye la imagen Docker, la publica en GitHub Container Registry y la despliega en Render. La configuración inicial (Aiven, Render, secretos de GitHub y correo) está en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
