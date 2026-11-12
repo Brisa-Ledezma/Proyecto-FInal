@@ -1,9 +1,10 @@
 import { useParams } from 'react-router-dom';
-import { SealCheck, SealWarning, LockKey } from '@phosphor-icons/react';
+import { SealCheck, SealWarning, LockKey, Ticket } from '@phosphor-icons/react';
 import { api } from '../../api/cliente.js';
 import { useCarga } from '../../hooks/useCarga.js';
 import { useSesion } from '../../contexto/SesionContexto.jsx';
 import Boton from '../../componentes/ui/Boton.jsx';
+import Destellos from '../../componentes/ui/Destellos.jsx';
 import { Cargando, ErrorCarga, Vacio } from '../../componentes/ui/Estados.jsx';
 import './EntradaPublica.css';
 
@@ -40,6 +41,20 @@ export default function EntradaPublica() {
           <div>
             <span className="rotulo">Golden Screen Cinema</span>
             <h1 className="entrada-publica__titulo">Entrada única e intransferible</h1>
+          </div>
+        </div>
+
+        <div className="ticket-regalo">
+          <div className="ticket-regalo__papel">
+            <Destellos cantidad={6} />
+            <div className="ticket-regalo__talon" aria-hidden="true">
+              <Ticket weight="duotone" />
+              <span>Admite uno</span>
+            </div>
+            <p className="ticket-regalo__cuerpo">
+              <span className="ticket-regalo__rotulo">Golden Screen · Regalo</span>
+              <span className="ticket-regalo__texto">Dranuta les regala una entrada para el cine</span>
+            </p>
           </div>
         </div>
 
