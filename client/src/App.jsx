@@ -8,6 +8,7 @@ import Cartelera from './paginas/publico/Cartelera.jsx';
 import DetallePelicula from './paginas/publico/DetallePelicula.jsx';
 import Verificar from './paginas/publico/Verificar.jsx';
 import Privacidad from './paginas/publico/Privacidad.jsx';
+import EntradaPublica from './paginas/publico/EntradaPublica.jsx';
 import { NoEncontrada } from './paginas/SinPermiso.jsx';
 
 // Las pantallas de cada rol se cargan recién cuando se necesitan (RNF-09).
@@ -39,6 +40,7 @@ export default function App() {
         <Route path="/acceso" element={<Acceso />} />
         <Route path="/verificar/:token" element={<Verificar />} />
         <Route path="/privacidad" element={<Privacidad />} />
+        <Route path="/entrada/:codigo" element={<EntradaPublica />} />
         <Route path="/guia-de-estilos" element={<GuiaEstilos />} />
 
         {/* Espectador */}

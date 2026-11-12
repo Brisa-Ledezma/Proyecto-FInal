@@ -13,7 +13,10 @@ export default function EntradaDigital({ entrada, funcion }) {
 
   useEffect(() => {
     let vigente = true;
-    QRCode.toDataURL(entrada.codigo, { margin: 1, width: 240, errorCorrectionLevel: 'M', color: { dark: '#140b0d', light: '#fbf4e6' } })
+    // El QR lleva el enlace público de la entrada: si lo escanea cualquier celular, abre una
+    // página que confirma que es una entrada de Golden Screen, única e intransferible.
+    // El lector del encargado toma el código de ese enlace.
+    QRCode.toDataURL(`${window.location.origin}/entrada/${entrada.codigo}`, { margin: 1, width: 240, errorCorrectionLevel: 'M', color: { dark: '#140b0d', light: '#fbf4e6' } })
       .then((url) => { if (vigente) setQr(url); });
     return () => { vigente = false; };
   }, [entrada.codigo]);
@@ -40,6 +43,7 @@ export default function EntradaDigital({ entrada, funcion }) {
       <div className="entrada-digital__talon">
         {qr ? <img src={qr} alt={`Código QR de la entrada ${entrada.codigo}`} className="entrada-digital__qr" width="132" height="132" /> : <span className="entrada-digital__qr" />}
         <span className="entrada-digital__codigo cifra">{entrada.codigo}</span>
+        <span className="entrada-digital__aviso">Única e intransferible</span>
       </div>
     </article>
   );

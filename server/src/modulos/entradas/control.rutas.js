@@ -7,9 +7,23 @@ import { normalizarCodigoEntrada } from '../../utils/codigos.js';
 import { requerirRol, ROLES } from '../../middlewares/sesion.js';
 
 export const rutasControl = Router();
-rutasControl.use('/control', requerirRol(ROLES.ENCARGADO));
 
 const { minutosAntesValidacion } = config.reglas;
+
+/**
+ * Lo que ve cualquiera que escanee el QR con la cámara del celular: solo confirma que el
+ * código es de una entrada emitida por Golden Screen. No se entrega ningún dato del titular
+ * ni de la función a terceros (RNF-14); la entrada completa la ve el titular en «Mis entradas»
+ * y la valida el encargado de sala (RF-10).
+ */
+rutasControl.get('/entradas/:codigo/publica', manejar(async (req, res) => {
+  const codigo = normalizarCodigoEntrada(req.params.codigo);
+  const entrada = codigo && await consultarUno('SELECT 1 FROM entrada WHERE codigo_qr = ?', [codigo]);
+  if (!entrada) throw noEncontrado('Este código no corresponde a ninguna entrada de Golden Screen.');
+  res.json({ autentica: true });
+}));
+
+rutasControl.use('/control', requerirRol(ROLES.ENCARGADO));
 
 const CONSULTA_FUNCION = `
   SELECT f.id_funcion, f.fecha_hora_inicio, f.fecha_hora_fin, f.estado, s.nombre AS sala,
@@ -76,8 +90,9 @@ rutasControl.post('/control/funciones/:id/validar', manejar(async (req, res) => 
   const entrada = await consultarUno(
     `SELECT e.id_entrada, e.id_funcion, e.estado, e.fecha_hora_ingreso, fi.letra, b.numero,
             p.titulo, s.nombre AS sala, DATE_FORMAT(f.fecha_hora_inicio, '%d/%m %H:%i') AS cuando,
-            DATE_FORMAT(e.fecha_hora_ingreso, '%H:%i') AS hora_ingreso
+            DATE_FORMAT(e.fecha_hora_ingreso, '%H:%i') AS hora_ingreso, u.nombre, u.apellido
        FROM entrada e
+       JOIN reserva r ON r.id_reserva = e.id_reserva JOIN usuario u ON u.id_usuario = r.id_usuario
        JOIN butaca b ON b.id_butaca = e.id_butaca JOIN fila fi ON fi.id_fila = b.id_fila
        JOIN funcion f ON f.id_funcion = e.id_funcion JOIN pelicula p ON p.id_pelicula = f.id_pelicula
        JOIN sala s ON s.id_sala = f.id_sala
@@ -87,7 +102,8 @@ rutasControl.post('/control/funciones/:id/validar', manejar(async (req, res) => 
 
   // CU-08, A1: código inexistente o de otra función
   if (!entrada) return rechazo('El código no corresponde a ninguna entrada.');
-  const butaca = { fila: entrada.letra, numero: entrada.numero };
+  // La entrada es intransferible: el encargado ve el titular para poder pedir el documento.
+  const butaca = { fila: entrada.letra, numero: entrada.numero, titular: `${entrada.nombre} ${entrada.apellido}`, pelicula: entrada.titulo };
   if (entrada.id_funcion !== idFuncion) {
     return rechazo(`La entrada es para otra función: ${entrada.titulo}, ${entrada.cuando}, ${entrada.sala}.`, { butaca });
   }
