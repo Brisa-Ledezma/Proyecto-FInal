@@ -12,7 +12,10 @@
     "dev:movil": "concurrently -k -n api,web -c yellow,magenta \"npm run dev -w server\" \"npm run dev:movil -w client\"",
     "db:setup": "npm run db:setup -w server",
     "build": "npm run build -w client",
-    "start": "npm run start -w server"
+    "start": "npm run start -w server",
+    "desplegar": "node scripts/desplegar.mjs",
+    "docker:dev": "docker compose up --build",
+    "docker:prod": "docker compose --profile produccion up --build app"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

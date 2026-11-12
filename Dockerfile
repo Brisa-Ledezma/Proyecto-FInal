@@ -27,8 +27,11 @@ RUN npm run build -w client
 
 # Producción: solo dependencias de ejecución del servidor y usuario sin privilegios.
 FROM base AS prod
+# Commit de la imagen: /api/salud lo informa y el pipeline confirma que se desplegó.
+ARG VERSION=local
 ENV NODE_ENV=production \
-    PORT=3001
+    PORT=3001 \
+    VERSION=$VERSION
 RUN npm ci --omit=dev --workspace server --include-workspace-root=false && npm cache clean --force
 COPY server/src server/src
 COPY server/database server/database

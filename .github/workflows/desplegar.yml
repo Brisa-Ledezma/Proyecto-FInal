@@ -1,0 +1,167 @@
+# Despliegue automático a producción.
+# Cada push a la rama `test` (o `npm run desplegar`) hace, sin preguntar:
+#   1. Verificar: compila el front, arranca la API contra un MySQL de prueba y la consulta.
+#   2. Imagen:    construye la imagen Docker de producción y la publica en
+#                 GitHub Container Registry (ghcr.io/<usuario>/golden-screen).
+#   3. Desplegar: le pide a Render que use la imagen nueva y espera a que responda.
+# Si un paso falla, los siguientes no corren y producción queda como estaba.
+# Configuración necesaria (una sola vez): ver docs/DESPLIEGUE.md
+
+name: Desplegar
+
+on:
+  push:
+    branches: [test]
+  workflow_dispatch:
+
+# Si llegan dos pushes seguidos, el segundo espera al primero en lugar de pisarlo.
+concurrency:
+  group: desplegar
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    name: Verificar · build y prueba de la API
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: prueba
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -pprueba --silent"
+          --health-interval=5s --health-timeout=3s --health-retries=20
+    env:
+      NODE_ENV: production
+      PORT: 3001
+      DB_HOST: 127.0.0.1
+      DB_USER: root
+      DB_PASSWORD: prueba
+      DB_NAME: golden_screen
+      SESSION_SECRET: secreto-solo-para-la-prueba
+      ADMIN_EMAIL: admin@prueba.local
+      ADMIN_PASSWORD: clave-de-prueba
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Arrancar la API (crea y siembra la base vacía)
+        working-directory: server
+        run: |
+          node src/index.js > ../api.log 2>&1 &
+          for i in $(seq 1 60); do
+            curl --fail --silent http://127.0.0.1:3001/api/salud && echo && exit 0
+            sleep 2
+          done
+          cat ../api.log
+          exit 1
+
+      - name: Probar la API y el front
+        run: |
+          set -e
+          probar() { echo "→ $1"; curl --fail --silent --show-error --output /dev/null "http://127.0.0.1:3001$1"; }
+          probar /
+          probar /cartelera
+          probar /api/cartelera/en-cartel
+          # Inicio de sesión del administrador sembrado
+          curl --fail --silent --show-error -X POST http://127.0.0.1:3001/api/auth/login \
+            -H 'content-type: application/json' \
+            -d "{\"email\":\"$ADMIN_EMAIL\",\"contrasena\":\"$ADMIN_PASSWORD\"}" --output /dev/null
+          echo "✓ API y front responden"
+
+      - name: Registro de la API
+        if: always()
+        run: cat api.log || true
+
+  imagen:
+    name: Imagen · construir y publicar en GHCR
+    needs: verificar
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      imagen: ${{ steps.nombre.outputs.imagen }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Nombre de la imagen
+        id: nombre
+        # El registro exige minúsculas.
+        run: |
+          owner="${{ github.repository_owner }}"
+          echo "imagen=ghcr.io/${owner,,}/golden-screen" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: prod
+          push: true
+          build-args: |
+            VERSION=${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.description=Golden Screen: venta y reserva de entradas de cine
+          tags: |
+            ${{ steps.nombre.outputs.imagen }}:test
+            ${{ steps.nombre.outputs.imagen }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  desplegar:
+    name: Desplegar · Render
+    needs: imagen
+    runs-on: ubuntu-latest
+    environment:
+      name: produccion
+      url: ${{ vars.APP_URL }}
+    steps:
+      - name: Pedir a Render que use la imagen nueva
+        env:
+          DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          IMAGEN: ${{ needs.imagen.outputs.imagen }}:${{ github.sha }}
+        run: |
+          if [ -z "$DEPLOY_HOOK" ]; then
+            echo "::warning::Falta el secreto RENDER_DEPLOY_HOOK_URL: la imagen se publicó pero no se desplegó. Ver docs/DESPLIEGUE.md"
+            exit 0
+          fi
+          curl --fail --silent --show-error -X POST "${DEPLOY_HOOK}&imgURL=$(printf %s "$IMAGEN" | jq -sRr @uri)"
+          echo
+          echo "Desplegando $IMAGEN"
+
+      - name: Esperar a que el sitio responda con la versión nueva
+        if: vars.APP_URL != ''
+        run: |
+          # /api/salud informa el commit de la imagen en ejecución: mientras Render
+          # reemplaza el contenedor, el anterior sigue respondiendo con su versión.
+          for i in $(seq 1 90); do
+            version=$(curl --silent --max-time 20 "${{ vars.APP_URL }}/api/salud" | jq -r '.version // empty' 2>/dev/null || true)
+            if [ "$version" = "${{ github.sha }}" ]; then
+              echo "✓ Golden Screen en línea con la versión ${{ github.sha }}: ${{ vars.APP_URL }}"
+              exit 0
+            fi
+            echo "Esperando… (versión en línea: ${version:-sin respuesta})"
+            sleep 10
+          done
+          echo "::error::La versión nueva no quedó en línea en 15 minutos. Revisá los registros (Logs) del servicio en Render."
+          exit 1
