@@ -2,7 +2,9 @@ import path from 'node:path';
 import express from 'express';
 import helmet from 'helmet';
 import { config } from './config.js';
-import { carpetaCliente, carpetaUploads } from './rutas.js';
+import { carpetaCliente } from './rutas.js';
+import { pool } from './db.js';
+import { servirUpload } from './middlewares/subidas.js';
 import { manejadorErrores, rutaNoEncontrada } from './middlewares/errores.js';
 import { cargarUsuario, middlewareSesion } from './middlewares/sesion.js';
 import { rutasAuth } from './modulos/usuarios/auth.rutas.js';
@@ -19,19 +21,34 @@ export function crearApp() {
   app.disable('x-powered-by');
   app.set('trust proxy', 1);
 
-  // RNF-01: en producción toda solicitud HTTP se redirige a HTTPS.
+  // Estado del servicio y de la base. Lo usan el pipeline de despliegue, el chequeo
+  // de salud de Render y el workflow que mantiene la API despierta.
+  app.get('/api/salud', async (req, res) => {
+    try {
+      await pool.query('SELECT 1');
+      res.json({ estado: 'ok', servicio: 'Golden Screen API', base: 'ok' });
+    } catch {
+      res.status(503).json({ estado: 'error', servicio: 'Golden Screen API', base: 'sin conexión' });
+    }
+  });
+
+  // RNF-01: en producción toda solicitud HTTP se redirige a HTTPS. El proxy del
+  // hosting termina el TLS y avisa el protocolo original en X-Forwarded-Proto.
   if (config.produccion) {
-    app.use((req, res, next) => (req.secure ? next() : res.redirect(301, `https://${req.headers.host}${req.originalUrl}`)));
+    app.use((req, res, next) => (req.headers['x-forwarded-proto'] === 'http'
+      ? res.redirect(301, `https://${req.headers.host}${req.originalUrl}`)
+      : next()));
   }
 
   app.use(helmet({
     crossOriginResourcePolicy: { policy: 'same-site' },
-    contentSecurityPolicy: config.produccion ? undefined : false,
+    contentSecurityPolicy: config.produccion
+      ? { directives: { 'img-src': ["'self'", 'data:', 'blob:'] } } // blob: vista previa del afiche
+      : false,
   }));
   app.use(express.json({ limit: '200kb' }));
 
-  app.get('/api/salud', (req, res) => res.json({ estado: 'ok', servicio: 'Golden Screen API' }));
-  app.use('/uploads', express.static(carpetaUploads, { maxAge: '7d' }));
+  app.get('/uploads/:nombre', servirUpload);
 
   app.use('/api', middlewareSesion, cargarUsuario);
   app.use('/api/auth', rutasAuth);

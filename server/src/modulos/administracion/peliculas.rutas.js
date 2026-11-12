@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { consultar, consultarUno, enTransaccion } from '../../db.js';
 import { manejar, noEncontrado, verificarCampos } from '../../utils/errores.js';
 import { idValido, limpiar } from '../../utils/validacion.js';
-import { borrarUpload, subirAfiche, urlUpload } from '../../middlewares/subidas.js';
+import { borrarUpload, guardarUpload, subirAfiche } from '../../middlewares/subidas.js';
 import { cancelarFunciones, enviarAvisos } from './funciones.servicio.js';
 
 export const rutasPeliculas = Router();
@@ -59,9 +59,8 @@ rutasPeliculas.get('/', manejar(async (req, res) => {
 /** Alta de película con afiche opcional. */
 rutasPeliculas.post('/', subirAfiche, manejar(async (req, res) => {
   const { errores, datos } = validarPelicula(req.body ?? {});
-  if (Object.keys(errores).length && req.file) await borrarUpload(urlUpload(req.file.filename));
   verificarCampos(errores);
-  const resultado = await consultar('INSERT INTO pelicula SET ?', [{ ...datos, afiche: urlUpload(req.file?.filename) }]);
+  const resultado = await consultar('INSERT INTO pelicula SET ?', [{ ...datos, afiche: await guardarUpload(req.file) }]);
   const pelicula = await consultarUno(`${CONSULTA_LISTADO} WHERE p.id_pelicula = ?`, [resultado.insertId]);
   res.status(201).json(aPeliculaAdmin(pelicula));
 }));
@@ -70,16 +69,12 @@ rutasPeliculas.post('/', subirAfiche, manejar(async (req, res) => {
 rutasPeliculas.put('/:id', subirAfiche, manejar(async (req, res) => {
   const id = idValido(req.params.id);
   const actual = id && await consultarUno('SELECT * FROM pelicula WHERE id_pelicula = ?', [id]);
-  if (!actual) {
-    if (req.file) await borrarUpload(urlUpload(req.file.filename));
-    throw noEncontrado('No encontramos esta película.');
-  }
+  if (!actual) throw noEncontrado('No encontramos esta película.');
   const { errores, datos } = validarPelicula(req.body ?? {});
-  if (Object.keys(errores).length && req.file) await borrarUpload(urlUpload(req.file.filename));
   verificarCampos(errores);
 
   let afiche = actual.afiche;
-  if (req.file) afiche = urlUpload(req.file.filename);
+  if (req.file) afiche = await guardarUpload(req.file);
   else if (req.body?.quitarAfiche === 'true') afiche = null;
 
   await consultar('UPDATE pelicula SET ? WHERE id_pelicula = ?', [{ ...datos, afiche }, id]);

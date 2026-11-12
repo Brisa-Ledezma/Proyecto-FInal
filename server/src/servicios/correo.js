@@ -13,12 +13,18 @@ let esEthereal = false;
 async function obtenerTransporte() {
   if (transporte) return transporte;
   if (config.correo.host) {
+    // 465 usa TLS directo; el resto (2525, 587) negocia TLS con STARTTLS.
+    // En el plan gratuito de Render solo funciona el 2525: 25, 465 y 587 están bloqueados.
     transporte = nodemailer.createTransport({
       host: config.correo.host,
       port: config.correo.port,
+      secure: config.correo.port === 465,
       auth: { user: config.correo.user, pass: config.correo.pass },
     });
   } else {
+    if (config.produccion) {
+      console.warn('[correo] MAIL_HOST está vacío: los correos irán a Ethereal y no llegarán a nadie. Configurá MAIL_* en producción.');
+    }
     const cuenta = await nodemailer.createTestAccount();
     transporte = nodemailer.createTransport({ host: cuenta.smtp.host, port: cuenta.smtp.port, secure: cuenta.smtp.secure, auth: { user: cuenta.user, pass: cuenta.pass } });
     esEthereal = true;

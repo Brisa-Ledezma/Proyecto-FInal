@@ -166,3 +166,13 @@ CREATE TABLE correo_enviado (
   enviado_en  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   vista_previa VARCHAR(255) NULL
 ) ENGINE=InnoDB;
+
+-- Archivos subidos (afiches). Se guardan en la base y no en el disco porque el
+-- disco de los servidores en la nube se borra en cada despliegue o reinicio.
+-- Las mismas columnas se crean en bases existentes desde database/preparar.js.
+CREATE TABLE archivo (
+  nombre     VARCHAR(80)  NOT NULL PRIMARY KEY,
+  tipo_mime  VARCHAR(40)  NOT NULL,
+  datos      MEDIUMBLOB   NOT NULL,
+  creado_en  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;

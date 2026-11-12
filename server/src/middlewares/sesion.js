@@ -18,7 +18,9 @@ export const middlewareSesion = session({
   resave: false,
   saveUninitialized: false,
   rolling: true,
-  cookie: { httpOnly: true, sameSite: 'lax', secure: config.produccion, maxAge: DURACION_MS },
+  // secure 'auto': la cookie es Secure cuando la conexión original es HTTPS (en la nube,
+  // según X-Forwarded-Proto del proxy) y también se puede probar por http://localhost.
+  cookie: { httpOnly: true, sameSite: 'lax', secure: 'auto', maxAge: DURACION_MS },
 });
 
 const ultimaEscritura = new Map();
