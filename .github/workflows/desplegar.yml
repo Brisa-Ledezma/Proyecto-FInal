@@ -36,8 +36,9 @@ jobs:
         options: >-
           --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -pprueba --silent"
           --health-interval=5s --health-timeout=3s --health-retries=20
+    # NODE_ENV=production va solo en el paso que arranca la API: si estuviera acá,
+    # npm ci omitiría las devDependencies y no se instalaría Vite para el build.
     env:
-      NODE_ENV: production
       PORT: 3001
       DB_HOST: 127.0.0.1
       DB_USER: root
@@ -47,9 +48,9 @@ jobs:
       ADMIN_EMAIL: admin@prueba.local
       ADMIN_PASSWORD: clave-de-prueba
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
           cache: npm
@@ -59,6 +60,8 @@ jobs:
 
       - name: Arrancar la API (crea y siembra la base vacía)
         working-directory: server
+        env:
+          NODE_ENV: production
         run: |
           node src/index.js > ../api.log 2>&1 &
           for i in $(seq 1 60); do
@@ -95,7 +98,7 @@ jobs:
     outputs:
       imagen: ${{ steps.nombre.outputs.imagen }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Nombre de la imagen
         id: nombre
