@@ -71,8 +71,12 @@ export default function EntradaPublica() {
         <div className="entrada-publica__acciones">
           {usuario?.rol === 'ENCARGADO_SALA'
             ? <Boton variante="ticket" a="/control">Ir al control de ingreso</Boton>
-            : <Boton variante="ticket" a="/mis-entradas">Ver mis entradas</Boton>}
-          <Boton variante="secundario" a="/">Ver la cartelera</Boton>
+            : (
+              <>
+                <Boton variante="ticket" a="/mis-entradas">Ver mis entradas</Boton>
+                <Boton variante="secundario" a="/">Ver la cartelera</Boton>
+              </>
+            )}
         </div>
       </article>
     </div>
